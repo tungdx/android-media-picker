@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="picker_imageloading">#252528</color>
+    <color name="picker_grid_state_pressed">#DC007aff</color>
+    <color name="picker_grid_state_focused">#DC007aff</color>
+    <color name="picker_color">#007aff</color>
+
+</resources>

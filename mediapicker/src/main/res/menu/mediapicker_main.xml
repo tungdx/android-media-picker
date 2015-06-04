@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.demogallery.MainActivity">
+
+    <item
+        android:id="@id/media_switcher"
+        android:icon="@drawable/ab_picker_camera2"
+        android:title="@string/picker_switch_media"
+        app:showAsAction="always" />
+    <item
+        android:id="@id/take_photo"
+        android:icon="@drawable/ab_picker_camera"
+        android:title="@string/picker_take_photo"
+        app:showAsAction="always" />
+    <item
+        android:id="@id/take_video"
+        android:icon="@drawable/ab_picker_video"
+        android:title="@string/picker_record_video"
+        app:showAsAction="always" />
+
+    <group>
+        <item
+            android:id="@id/done"
+            android:title="@string/picker_done_capital"
+            android:visible="false"
+            app:showAsAction="always" />
+    </group>
+
+</menu>

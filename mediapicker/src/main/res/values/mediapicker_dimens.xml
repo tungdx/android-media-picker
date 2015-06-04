@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="picker_photo_size">100dp</dimen>
+    <dimen name="picker_photo_spacing">4dp</dimen>
+    <dimen name="picker_border_size">3dp</dimen>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="take_photo" type="id"></item>
+    <item name="take_video" type="id"></item>
+    <item name="done" type="id"></item>
+    <item name="media_switcher" type="id"></item>
+    <item name="container" type="id"></item>
+    <item name="rotate_left" type="id"></item>
+    <item name="rotate_right" type="id"></item>
+    <item name="save" type="id"></item>
+    <item name="cancle" type="id"></item>
+    <item name="crop" type="id"></item>
+    <item name="grid" type="id"></item>
+    <item name="no_data" type="id"></item>
+    <item name="overlay" type="id"></item>
+    <item name="thumbnail" type="id"></item>
+    <item name="retry_button" type="id"></item>
+    <item name="state_text" type="id"></item>
+    <item name="content_layout" type="id"></item>
+    <item name="loading_layout" type="id"></item>
+    <item name="error_layout" type="id"></item>
+
+</resources>

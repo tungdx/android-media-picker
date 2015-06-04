@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="picker_take_photo">Take photo</string>
+    <string name="picker_record_video">Record video</string>
+    <string name="picker_switch_media">Switch media</string>
+    <string name="picker_no_items">No items.</string>
+    <string name="picker_done_capital">DONE</string>
+
+    <plurals name="picker_video_duration_min">
+        <item quantity="one">This video\'s duration smaller than %d second.</item>
+        <item quantity="other">This video\'s duration smaller than %d seconds.</item>
+    </plurals>
+    <plurals name="picker_video_duration_max">
+        <item quantity="one">This video\'s duration larger than %d second.</item>
+        <item quantity="other">This video\'s duration larger than %d seconds.</item>
+    </plurals>
+    <plurals name="picker_video_duration_warning">
+        <item quantity="one">Video\'s duration limit is  %d second.</item>
+        <item quantity="other">Video\'s duration limit is  %d seconds.</item>
+    </plurals>
+
+</resources>

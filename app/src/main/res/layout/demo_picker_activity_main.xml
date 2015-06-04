@@ -1,0 +1,114 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/list_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/showfragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test NMediaPicker in Fragment" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Below is test NMediaPicker in Activity" />
+
+            <Button
+                android:id="@+id/all_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All defaults" />
+
+            <Button
+                android:id="@+id/select_crop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Photo and Crop (Default cropped file)" />
+
+            <Button
+                android:id="@+id/select_crop_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Photo and Crop (Options cropped file)" />
+
+            <Button
+                android:id="@+id/select_crop_xy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Photo and Crop (Aspect X=3 vs Aspect Y=1)" />
+
+            <Button
+                android:id="@+id/select_crop_not_fix_ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Photo and Crop (Not fix AspectRatio)" />
+
+            <Button
+                android:id="@+id/select_only_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select videos" />
+
+            <Button
+                android:id="@+id/select_only_video_max_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select videos and set max duration" />
+
+            <Button
+                android:id="@+id/select_only_video_min_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select videos and set min duration" />
+
+            <Button
+                android:id="@+id/select_only_video_max_duration_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select videos and set max duration AND show warning before record" />
+
+            <Button
+                android:id="@+id/select_both_video_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select both photos vs video" />
+
+            <Button
+                android:id="@+id/select_pass_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pass media list selected " />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
