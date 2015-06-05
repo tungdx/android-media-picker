@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class DemoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater
-                .inflate(R.layout.demo_picker_fragment, container, false);
+                .inflate(R.layout.fragment_demo, container, false);
     }
 
     @Override
@@ -91,9 +91,11 @@ public class DemoFragment extends Fragment {
         mLinearLayout.addView(imageView);
 
         if (mediaItem.getUriCropped() == null) {
-            Picasso.with(getActivity()).load(mediaItem.getUriOrigin()).into(imageView);
+//            Picasso.with(getActivity()).load(mediaItem.getUriOrigin()).into(imageView);
+            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(), imageView);
         } else {
-            Picasso.with(getActivity()).load(mediaItem.getUriCropped()).into(imageView);
+//            Picasso.with(getActivity()).load(mediaItem.getUriCropped()).into(imageView);
+            ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
         }
     }
 

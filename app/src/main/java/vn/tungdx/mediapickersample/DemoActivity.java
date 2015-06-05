@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.demo_picker_activity_main);
+        setContentView(R.layout.activity_demo);
 
         mMessage = (TextView) findViewById(R.id.textView1);
         mLinearLayout = (LinearLayout) findViewById(R.id.list_image);
@@ -98,9 +98,11 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         mLinearLayout.addView(imageView);
 
         if (mediaItem.getUriCropped() == null) {
-            Picasso.with(getApplicationContext()).load(mediaItem.getUriOrigin()).into(imageView);
+//            Picasso.with(getApplicationContext()).load(mediaItem.getUriOrigin()).into(imageView);
+            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(),imageView);
         } else {
-            Picasso.with(getApplicationContext()).load(mediaItem.getUriCropped()).into(imageView);
+//            Picasso.with(getApplicationContext()).load(mediaItem.getUriCropped()).into(imageView);
+            ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
         }
     }
 

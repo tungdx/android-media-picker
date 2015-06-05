@@ -69,12 +69,7 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
             mPickerImageViewSelected.add(holder.imageView);
         }
         holder.imageView.setMediaType(mMediaType);
-        mImageLoader.displayImage(uri,holder.imageView);
-//        mImageLoader.display(uri, holder.imageView,
-//                new NDisplayOptions.Builder().setCheckActualViewSize(false)
-//                        .setImageOnLoading(R.color.picker_imageloading)
-//                        .setImageOnFail(R.drawable.ic_picker_imagefail)
-//                        .cacheOnDisk(false).build());
+        mImageLoader.displayImage(uri, holder.imageView);
     }
 
     @Override

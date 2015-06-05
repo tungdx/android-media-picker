@@ -4,33 +4,45 @@ import android.content.Context;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
-import java.io.File;
+import vn.tungdx.mediapicker.R;
 
 /**
  * @author TUNGDX
  */
 
 public class NImageLoaderImpl implements NImageLoader {
-    private Context mContext;
 
     public NImageLoaderImpl(Context context) {
-        mContext = context;
-    }
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .showImageOnLoading(R.color.picker_imageloading)
+                .cacheOnDisk(false)
+                .considerExifParams(true).resetViewBeforeLoading(true).build();
 
-    @Override
-    public void displayImage(String url, ImageView imageView) {
-        Picasso.with(mContext).load(url).into(imageView);
-    }
+        ImageLoaderConfiguration imageLoaderConfig = new ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .memoryCacheSizePercentage(30)
+                .tasksProcessingOrder(QueueProcessingType.FIFO)
+                .writeDebugLogs().threadPoolSize(3)
+                .defaultDisplayImageOptions(displayImageOptions).build();
 
-    @Override
-    public void displayImage(File file, ImageView imageView) {
-        Picasso.with(mContext).load(file).into(imageView);
+        ImageLoader.getInstance().init(imageLoaderConfig);
     }
 
     @Override
     public void displayImage(Uri uri, ImageView imageView) {
-        Picasso.with(mContext).load(uri).into(imageView);
+        ImageAware imageAware = new ImageViewAware(imageView,
+                false);
+        ImageLoader.getInstance().displayImage(uri.toString(), imageAware);
     }
 }
