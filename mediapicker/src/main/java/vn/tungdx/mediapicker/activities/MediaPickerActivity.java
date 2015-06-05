@@ -164,7 +164,7 @@ public class MediaPickerActivity extends ActionBarActivity implements
             mMediaOptions = getIntent().getParcelableExtra(EXTRA_MEDIA_OPTIONS);
             if (mMediaOptions == null) {
                 throw new IllegalArgumentException(
-                        "NMediaOptions must be not null, you should use NMediaPickerActivity.open(Activity activity, int requestCode,NMediaOptions options) method instead.");
+                        "NMediaOptions must be not null, you should use MediaPickerActivity.open(Activity activity, int requestCode,MediaOptions options) method instead.");
             }
         }
         Fragment fragment = getSupportFragmentManager().findFragmentById(
