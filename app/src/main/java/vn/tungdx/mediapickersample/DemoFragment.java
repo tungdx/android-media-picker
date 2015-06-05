@@ -22,7 +22,7 @@ import vn.tungdx.mediapicker.NMediaItem;
 import vn.tungdx.mediapicker.activities.NMediaPickerActivity;
 
 
-public class DemoMediaPickerFragment extends Fragment {
+public class DemoFragment extends Fragment {
     private static final int REQUEST_MEDIA = 100;
     private static final String TAG = "DemoMediaPickerFragment";
     private TextView mMessage;
@@ -43,7 +43,7 @@ public class DemoMediaPickerFragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        NMediaPickerActivity.open(DemoMediaPickerFragment.this,
+                        NMediaPickerActivity.open(DemoFragment.this,
                                 REQUEST_MEDIA);
                         clearImages();
                     }

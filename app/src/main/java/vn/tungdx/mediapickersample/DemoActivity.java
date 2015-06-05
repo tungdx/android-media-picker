@@ -158,7 +158,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
                         .setMediaListSelected(mMediaSelectedList).build();
                 break;
             case R.id.showfragment:
-                showFragment(new DemoMediaPickerFragment());
+                showFragment(new DemoFragment());
                 break;
             default:
                 break;
