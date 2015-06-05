@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.imageloader.NImageLoader;
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.imageloader.ImageLoader;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.widget.PickerImageView;
 
 /**
@@ -24,24 +24,24 @@ import vn.tungdx.mediapicker.widget.PickerImageView;
 /**
  * Adapter for display media item list.
  */
-public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
+public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     private int mMediaType;
-    private NImageLoader mImageLoader;
-    private List<NMediaItem> mMediaListSelected = new ArrayList<NMediaItem>();
-    private NMediaOptions mMediaOptions;
+    private ImageLoader mImageLoader;
+    private List<MediaItem> mMediaListSelected = new ArrayList<MediaItem>();
+    private MediaOptions mMediaOptions;
     private int mItemHeight = 0;
     private int mNumColumns = 0;
     private RelativeLayout.LayoutParams mImageViewLayoutParams;
     private List<PickerImageView> mPickerImageViewSelected = new ArrayList<PickerImageView>();
 
-    public NMediaAdapter(Context context, Cursor c, int flags,
-                         NImageLoader imageLoader, int mediaType, NMediaOptions mediaOptions) {
+    public MediaAdapter(Context context, Cursor c, int flags,
+                        ImageLoader imageLoader, int mediaType, MediaOptions mediaOptions) {
         this(context, c, flags, null, imageLoader, mediaType, mediaOptions);
     }
 
-    public NMediaAdapter(Context context, Cursor c, int flags,
-                         List<NMediaItem> mediaListSelected, NImageLoader imageLoader,
-                         int mediaType, NMediaOptions mediaOptions) {
+    public MediaAdapter(Context context, Cursor c, int flags,
+                        List<MediaItem> mediaListSelected, ImageLoader imageLoader,
+                        int mediaType, MediaOptions mediaOptions) {
         super(context, c, flags);
         if (mediaListSelected != null)
             mMediaListSelected = mediaListSelected;
@@ -56,11 +56,11 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
     public void bindView(View view, Context context, Cursor cursor) {
         final ViewHolder holder = (ViewHolder) view.getTag();
         final Uri uri;
-        if (mMediaType == NMediaItem.PHOTO) {
-            uri = NMediaUtils.getPhotoUri(cursor);
+        if (mMediaType == MediaItem.PHOTO) {
+            uri = MediaUtils.getPhotoUri(cursor);
             holder.thumbnail.setVisibility(View.GONE);
         } else {
-            uri = NMediaUtils.getVideoUri(cursor);
+            uri = MediaUtils.getVideoUri(cursor);
             holder.thumbnail.setVisibility(View.VISIBLE);
         }
         boolean isSelected = isSelected(uri);
@@ -107,7 +107,7 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
     public boolean isSelected(Uri uri) {
         if (uri == null)
             return false;
-        for (NMediaItem item : mMediaListSelected) {
+        for (MediaItem item : mMediaListSelected) {
             if (item.getUriOrigin().equals(uri))
                 return true;
         }
@@ -115,21 +115,21 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
     }
 
     /**
-     * Check {@link NMediaItem} is selected or not.
+     * Check {@link MediaItem} is selected or not.
      *
-     * @param item {@link NMediaItem} to check.
+     * @param item {@link MediaItem} to check.
      * @return true if selected, false otherwise.
      */
-    public boolean isSelected(NMediaItem item) {
+    public boolean isSelected(MediaItem item) {
         return mMediaListSelected.contains(item);
     }
 
     /**
-     * Set {@link NMediaItem} selected.
+     * Set {@link MediaItem} selected.
      *
-     * @param item {@link NMediaItem} to selected.
+     * @param item {@link MediaItem} to selected.
      */
-    public void setMediaSelected(NMediaItem item) {
+    public void setMediaSelected(MediaItem item) {
         syncMediaSelectedAsOptions();
         if (!mMediaListSelected.contains(item))
             mMediaListSelected.add(item);
@@ -140,7 +140,7 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
      *
      * @param item Item to update.
      */
-    public void updateMediaSelected(NMediaItem item,
+    public void updateMediaSelected(MediaItem item,
                                     PickerImageView pickerImageView) {
         if (mMediaListSelected.contains(item)) {
             mMediaListSelected.remove(item);
@@ -161,18 +161,18 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
     }
 
     /**
-     * @return List of {@link NMediaItem} selected.
+     * @return List of {@link MediaItem} selected.
      */
-    public List<NMediaItem> getMediaSelectedList() {
+    public List<MediaItem> getMediaSelectedList() {
         return mMediaListSelected;
     }
 
     /**
-     * Set list of {@link NMediaItem} selected.
+     * Set list of {@link MediaItem} selected.
      *
      * @param list
      */
-    public void setMediaSelectedList(List<NMediaItem> list) {
+    public void setMediaSelectedList(List<MediaItem> list) {
         mMediaListSelected = list;
     }
 
@@ -183,13 +183,13 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
      */
     private boolean syncMediaSelectedAsOptions() {
         switch (mMediaType) {
-            case NMediaItem.PHOTO:
+            case MediaItem.PHOTO:
                 if (!mMediaOptions.canSelectMultiPhoto()) {
                     mMediaListSelected.clear();
                     return true;
                 }
                 break;
-            case NMediaItem.VIDEO:
+            case MediaItem.VIDEO:
                 if (!mMediaOptions.canSelectMultiVideo()) {
                     mMediaListSelected.clear();
                     return true;
@@ -203,7 +203,7 @@ public class NMediaAdapter extends CursorAdapter implements RecyclerListener {
     }
 
     /**
-     * {@link NMediaItem#VIDEO} or {@link NMediaItem#PHOTO}
+     * {@link MediaItem#VIDEO} or {@link MediaItem#PHOTO}
      *
      * @param mediaType
      */

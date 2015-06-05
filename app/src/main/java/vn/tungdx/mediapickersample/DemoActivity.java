@@ -21,9 +21,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-import vn.tungdx.mediapicker.NMediaItem;
-import vn.tungdx.mediapicker.NMediaOptions;
-import vn.tungdx.mediapicker.activities.NMediaPickerActivity;
+import vn.tungdx.mediapicker.MediaItem;
+import vn.tungdx.mediapicker.MediaOptions;
+import vn.tungdx.mediapicker.activities.MediaPickerActivity;
 
 public class DemoActivity extends FragmentActivity implements OnClickListener {
     private static final String TAG = "DemoActivity";
@@ -31,7 +31,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
     private static final int REQUEST_MEDIA = 100;
     private TextView mMessage;
     private LinearLayout mLinearLayout;
-    private List<NMediaItem> mMediaSelectedList;
+    private List<MediaItem> mMediaSelectedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +63,12 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_MEDIA) {
             if (resultCode == RESULT_OK) {
-                mMediaSelectedList = NMediaPickerActivity
+                mMediaSelectedList = MediaPickerActivity
                         .getNMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
 
                     StringBuilder builder = new StringBuilder();
-                    for (NMediaItem mediaItem : mMediaSelectedList) {
+                    for (MediaItem mediaItem : mMediaSelectedList) {
                         Log.i(TAG, mediaItem.toString());
                         builder.append(mediaItem.toString());
                         builder.append(", PathOrigin=");
@@ -91,7 +91,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         }
     }
 
-    private void addImages(NMediaItem mediaItem) {
+    private void addImages(MediaItem mediaItem) {
         ImageView imageView = new ImageView(getApplicationContext());
         LayoutParams params = new LayoutParams(180, 180);
         imageView.setLayoutParams(params);
@@ -108,11 +108,11 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        NMediaOptions.Builder builder = new NMediaOptions.Builder();
-        NMediaOptions options = null;
+        MediaOptions.Builder builder = new MediaOptions.Builder();
+        MediaOptions options = null;
         switch (v.getId()) {
             case R.id.all_default:
-                options = NMediaOptions.createDefault();
+                options = MediaOptions.createDefault();
                 break;
             case R.id.select_crop:
                 options = builder.setIsCropped(true).setFixAspectRatio(true)
@@ -167,7 +167,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         }
         if (options != null) {
             clearImages();
-            NMediaPickerActivity.open(this, REQUEST_MEDIA, options);
+            MediaPickerActivity.open(this, REQUEST_MEDIA, options);
         }
     }
 

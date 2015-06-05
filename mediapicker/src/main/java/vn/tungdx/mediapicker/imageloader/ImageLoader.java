@@ -8,6 +8,6 @@ import java.io.File;
 /**
  * @author TUNGDX
  */
-public interface NImageLoader{
+public interface ImageLoader {
     void displayImage(Uri uri, ImageView imageView);
 }

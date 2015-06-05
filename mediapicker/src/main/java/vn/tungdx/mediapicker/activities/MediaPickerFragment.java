@@ -25,12 +25,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.NMediaAdapter;
-import vn.tungdx.mediapicker.NMediaItem;
-import vn.tungdx.mediapicker.NMediaOptions;
-import vn.tungdx.mediapicker.NMediaSelectedListener;
+import vn.tungdx.mediapicker.MediaAdapter;
+import vn.tungdx.mediapicker.MediaItem;
+import vn.tungdx.mediapicker.MediaOptions;
+import vn.tungdx.mediapicker.MediaSelectedListener;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.Utils;
 import vn.tungdx.mediapicker.widget.HeaderGridView;
 import vn.tungdx.mediapicker.widget.PickerImageView;
@@ -42,10 +42,10 @@ import vn.tungdx.mediapicker.widget.PickerImageView;
 
 /**
  * Display list of videos, photos from {@link MediaStore} and select one or many
- * item from list depends on {@link NMediaOptions} that passed when open media
+ * item from list depends on {@link MediaOptions} that passed when open media
  * picker.
  */
-public class NMediaPickerFragment extends BaseFragment implements
+public class MediaPickerFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
     private static final String LOADER_EXTRA_URI = "loader_extra_uri";
     private static final String LOADER_EXTRA_PROJECT = "loader_extra_project";
@@ -55,23 +55,23 @@ public class NMediaPickerFragment extends BaseFragment implements
 
     private HeaderGridView mGridView;
     private TextView mNoItemView;
-    private NMediaAdapter mMediaAdapter;
-    private NMediaOptions mMediaOptions;
-    private NMediaSelectedListener mMediaSelectedListener;
+    private MediaAdapter mMediaAdapter;
+    private MediaOptions mMediaOptions;
+    private MediaSelectedListener mMediaSelectedListener;
     private Bundle mSavedInstanceState;
-    private List<NMediaItem> mMediaselectedList;
+    private List<MediaItem> mMediaselectedList;
 
     private int mMediaType;
     private int mPhotoSize, mPhotoSpacing;
 
-    public NMediaPickerFragment() {
+    public MediaPickerFragment() {
         mSavedInstanceState = new Bundle();
     }
 
-    public static NMediaPickerFragment newInstance(NMediaOptions options) {
+    public static MediaPickerFragment newInstance(MediaOptions options) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(NMediaPickerActivity.EXTRA_MEDIA_OPTIONS, options);
-        NMediaPickerFragment fragment = new NMediaPickerFragment();
+        bundle.putParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS, options);
+        MediaPickerFragment fragment = new MediaPickerFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -79,7 +79,7 @@ public class NMediaPickerFragment extends BaseFragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mMediaSelectedListener = (NMediaSelectedListener) activity;
+        mMediaSelectedListener = (MediaSelectedListener) activity;
     }
 
     @Override
@@ -87,19 +87,19 @@ public class NMediaPickerFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mMediaOptions = savedInstanceState
-                    .getParcelable(NMediaPickerActivity.EXTRA_MEDIA_OPTIONS);
+                    .getParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS);
             mMediaType = savedInstanceState.getInt(KEY_MEDIA_TYPE);
             mMediaselectedList = savedInstanceState
                     .getParcelableArrayList(KEY_MEDIA_SELECTED_LIST);
             mSavedInstanceState = savedInstanceState;
         } else {
             mMediaOptions = getArguments().getParcelable(
-                    NMediaPickerActivity.EXTRA_MEDIA_OPTIONS);
+                    MediaPickerActivity.EXTRA_MEDIA_OPTIONS);
             if (mMediaOptions.canSelectPhotoAndVideo()
                     || mMediaOptions.canSelectPhoto()) {
-                mMediaType = NMediaItem.PHOTO;
+                mMediaType = MediaItem.PHOTO;
             } else {
-                mMediaType = NMediaItem.VIDEO;
+                mMediaType = MediaItem.VIDEO;
             }
             mMediaselectedList = mMediaOptions.getMediaListSelected();
             // Override mediaType by 1st item media if has media selected.
@@ -126,7 +126,7 @@ public class NMediaPickerFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (mMediaType == NMediaItem.PHOTO) {
+        if (mMediaType == MediaItem.PHOTO) {
             requestPhotos(false);
         } else {
             requestVideos(false);
@@ -135,12 +135,12 @@ public class NMediaPickerFragment extends BaseFragment implements
 
     private void requestPhotos(boolean isRestart) {
         requestMedia(Images.Media.EXTERNAL_CONTENT_URI,
-                NMediaUtils.PROJECT_PHOTO, isRestart);
+                MediaUtils.PROJECT_PHOTO, isRestart);
     }
 
     private void requestVideos(boolean isRestart) {
         requestMedia(Video.Media.EXTERNAL_CONTENT_URI,
-                NMediaUtils.PROJECT_VIDEO, isRestart);
+                MediaUtils.PROJECT_VIDEO, isRestart);
     }
 
     private void requestMedia(Uri uri, String[] projects, boolean isRestart) {
@@ -161,10 +161,10 @@ public class NMediaPickerFragment extends BaseFragment implements
                     mGridView.onSaveInstanceState());
         }
         mSavedInstanceState.putParcelable(
-                NMediaPickerActivity.EXTRA_MEDIA_OPTIONS, mMediaOptions);
+                MediaPickerActivity.EXTRA_MEDIA_OPTIONS, mMediaOptions);
         mSavedInstanceState.putInt(KEY_MEDIA_TYPE, mMediaType);
         mSavedInstanceState.putParcelableArrayList(KEY_MEDIA_SELECTED_LIST,
-                (ArrayList<NMediaItem>) mMediaselectedList);
+                (ArrayList<MediaItem>) mMediaselectedList);
         outState.putAll(mSavedInstanceState);
     }
 
@@ -183,7 +183,7 @@ public class NMediaPickerFragment extends BaseFragment implements
         }
         switchToData();
         if (mMediaAdapter == null) {
-            mMediaAdapter = new NMediaAdapter(mContext, cursor, 0,
+            mMediaAdapter = new MediaAdapter(mContext, cursor, 0,
                     mImageLoader, mMediaType, mMediaOptions);
         } else {
             mMediaAdapter.setMediaType(mMediaType);
@@ -221,14 +221,14 @@ public class NMediaPickerFragment extends BaseFragment implements
         Object object = parent.getAdapter().getItem(position);
         if (object instanceof Cursor) {
             Uri uri;
-            if (mMediaType == NMediaItem.PHOTO) {
-                uri = NMediaUtils.getPhotoUri((Cursor) object);
+            if (mMediaType == MediaItem.PHOTO) {
+                uri = MediaUtils.getPhotoUri((Cursor) object);
             } else {
-                uri = NMediaUtils.getVideoUri((Cursor) object);
+                uri = MediaUtils.getVideoUri((Cursor) object);
             }
             PickerImageView pickerImageView = (PickerImageView) view
                     .findViewById(R.id.thumbnail);
-            NMediaItem mediaItem = new NMediaItem(mMediaType, uri);
+            MediaItem mediaItem = new MediaItem(mMediaType, uri);
             mMediaAdapter.updateMediaSelected(mediaItem, pickerImageView);
             mMediaselectedList = mMediaAdapter.getMediaSelectedList();
 
@@ -244,16 +244,16 @@ public class NMediaPickerFragment extends BaseFragment implements
     public void switchMediaSelector() {
         if (!mMediaOptions.canSelectPhotoAndVideo())
             return;
-        if (mMediaType == NMediaItem.PHOTO) {
-            mMediaType = NMediaItem.VIDEO;
+        if (mMediaType == MediaItem.PHOTO) {
+            mMediaType = MediaItem.VIDEO;
         } else {
-            mMediaType = NMediaItem.PHOTO;
+            mMediaType = MediaItem.PHOTO;
         }
         switch (mMediaType) {
-            case NMediaItem.PHOTO:
+            case MediaItem.PHOTO:
                 requestPhotos(true);
                 break;
-            case NMediaItem.VIDEO:
+            case MediaItem.VIDEO:
                 requestVideos(true);
                 break;
             default:
@@ -261,7 +261,7 @@ public class NMediaPickerFragment extends BaseFragment implements
         }
     }
 
-    public List<NMediaItem> getMediaSelectedList() {
+    public List<MediaItem> getMediaSelectedList() {
         return mMediaselectedList;
     }
 

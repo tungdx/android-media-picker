@@ -6,7 +6,6 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
-
     <style name="MediaPickerTheme" parent="Theme.AppCompat">
         <item name="android:actionMenuTextColor">@color/picker_color</item>
         <item name="android:windowActionBarOverlay">true</item>

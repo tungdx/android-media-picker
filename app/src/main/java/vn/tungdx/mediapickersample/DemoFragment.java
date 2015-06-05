@@ -18,8 +18,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-import vn.tungdx.mediapicker.NMediaItem;
-import vn.tungdx.mediapicker.activities.NMediaPickerActivity;
+import vn.tungdx.mediapicker.MediaItem;
+import vn.tungdx.mediapicker.activities.MediaPickerActivity;
 
 
 public class DemoFragment extends Fragment {
@@ -43,7 +43,7 @@ public class DemoFragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        NMediaPickerActivity.open(DemoFragment.this,
+                        MediaPickerActivity.open(DemoFragment.this,
                                 REQUEST_MEDIA);
                         clearImages();
                     }
@@ -55,15 +55,15 @@ public class DemoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ArrayList<NMediaItem> mMediaSelectedList;
+        ArrayList<MediaItem> mMediaSelectedList;
         if (requestCode == REQUEST_MEDIA) {
             if (resultCode == Activity.RESULT_OK) {
-                mMediaSelectedList = NMediaPickerActivity
+                mMediaSelectedList = MediaPickerActivity
                         .getNMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
 
                     StringBuilder builder = new StringBuilder();
-                    for (NMediaItem mediaItem : mMediaSelectedList) {
+                    for (MediaItem mediaItem : mMediaSelectedList) {
                         Log.i(TAG, mediaItem.toString());
                         builder.append(mediaItem.toString());
                         builder.append(", PathOrigin=");
@@ -84,7 +84,7 @@ public class DemoFragment extends Fragment {
         }
     }
 
-    private void addImages(NMediaItem mediaItem) {
+    private void addImages(MediaItem mediaItem) {
         ImageView imageView = new ImageView(getActivity());
         LayoutParams params = new LayoutParams(180, 180);
         imageView.setLayoutParams(params);

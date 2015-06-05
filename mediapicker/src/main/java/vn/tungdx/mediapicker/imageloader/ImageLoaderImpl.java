@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
@@ -18,9 +17,9 @@ import vn.tungdx.mediapicker.R;
  * @author TUNGDX
  */
 
-public class NImageLoaderImpl implements NImageLoader {
+public class ImageLoaderImpl implements ImageLoader {
 
-    public NImageLoaderImpl(Context context) {
+    public ImageLoaderImpl(Context context) {
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true).cacheOnDisk(true)
                 .showImageOnLoading(R.color.picker_imageloading)
@@ -36,13 +35,13 @@ public class NImageLoaderImpl implements NImageLoader {
                 .writeDebugLogs().threadPoolSize(3)
                 .defaultDisplayImageOptions(displayImageOptions).build();
 
-        ImageLoader.getInstance().init(imageLoaderConfig);
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(imageLoaderConfig);
     }
 
     @Override
     public void displayImage(Uri uri, ImageView imageView) {
         ImageAware imageAware = new ImageViewAware(imageView,
                 false);
-        ImageLoader.getInstance().displayImage(uri.toString(), imageAware);
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(uri.toString(), imageAware);
     }
 }

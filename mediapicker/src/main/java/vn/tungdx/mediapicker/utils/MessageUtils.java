@@ -2,7 +2,7 @@ package vn.tungdx.mediapicker.utils;
 
 import android.content.Context;
 
-import vn.tungdx.mediapicker.NMediaOptions;
+import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.R;
 
 /**
@@ -29,7 +29,7 @@ public class MessageUtils {
      * @param maxDuration
      * @return message when record and select video that has duration larger
      * than max options.
-     * {@link NMediaOptions.Builder#setMaxVideoDuration(int)}
+     * {@link MediaOptions.Builder#setMaxVideoDuration(int)}
      */
     public static String getInvalidMessageMaxVideoDuration(Context context,
                                                            int maxDuration) {
@@ -42,7 +42,7 @@ public class MessageUtils {
      * @param minDuration
      * @return message when record and select video that has duration smaller
      * than min options.
-     * {@link NMediaOptions.Builder#setMinVideoDuration(int)}
+     * {@link MediaOptions.Builder#setMinVideoDuration(int)}
      */
     public static String getInvalidMessageMinVideoDuration(Context context,
                                                            int minDuration) {

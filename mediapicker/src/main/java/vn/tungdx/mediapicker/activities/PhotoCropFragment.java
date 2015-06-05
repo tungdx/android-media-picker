@@ -21,11 +21,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import vn.tungdx.mediapicker.NCropListener;
-import vn.tungdx.mediapicker.NMediaItem;
-import vn.tungdx.mediapicker.NMediaOptions;
+import vn.tungdx.mediapicker.CropListener;
+import vn.tungdx.mediapicker.MediaItem;
+import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.Utils;
 import com.edmodo.cropper.CropImageView;
 /**
@@ -35,13 +35,13 @@ import com.edmodo.cropper.CropImageView;
 /**
  * For crop photo. Only crop one item at same time.
  */
-public class NPhotoCropFragment extends BaseFragment implements OnClickListener {
+public class PhotoCropFragment extends BaseFragment implements OnClickListener {
     private static final String EXTRA_MEDIA_SELECTED = "extra_media_selected";
     private static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
 
-    private NCropListener mCropListener;
-    private NMediaOptions mMediaOptions;
-    private NMediaItem mMediaItemSelected;
+    private CropListener mCropListener;
+    private MediaOptions mMediaOptions;
+    private MediaItem mMediaItemSelected;
     private CropImageView mCropImageView;
     private View mRotateLeft, mRotateRight;
     private View mCancle;
@@ -49,12 +49,12 @@ public class NPhotoCropFragment extends BaseFragment implements OnClickListener 
     private ProgressDialog mDialog;
     private SaveFileCroppedTask mSaveFileCroppedTask;
 
-    public static NPhotoCropFragment newInstance(NMediaItem item,
-                                                 NMediaOptions options) {
+    public static PhotoCropFragment newInstance(MediaItem item,
+                                                 MediaOptions options) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_MEDIA_SELECTED, item);
         bundle.putParcelable(EXTRA_MEDIA_OPTIONS, options);
-        NPhotoCropFragment cropFragment = new NPhotoCropFragment();
+        PhotoCropFragment cropFragment = new PhotoCropFragment();
         cropFragment.setArguments(bundle);
         return cropFragment;
     }
@@ -62,7 +62,7 @@ public class NPhotoCropFragment extends BaseFragment implements OnClickListener 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCropListener = (NCropListener) activity;
+        mCropListener = (CropListener) activity;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class NPhotoCropFragment extends BaseFragment implements OnClickListener 
         String filePath = null;
         String scheme = mMediaItemSelected.getUriOrigin().getScheme();
         if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
-            filePath = NMediaUtils.getRealImagePathFromURI(getActivity()
+            filePath = MediaUtils.getRealImagePathFromURI(getActivity()
                     .getContentResolver(), mMediaItemSelected.getUriOrigin());
         } else if (scheme.equals(ContentResolver.SCHEME_FILE)) {
             filePath = mMediaItemSelected.getUriOrigin().getPath();
@@ -129,7 +129,7 @@ public class NPhotoCropFragment extends BaseFragment implements OnClickListener 
             return;
         }
         int width = getResources().getDisplayMetrics().widthPixels / 3 * 2;
-        Bitmap bitmap = NMediaUtils.decodeSampledBitmapFromFile(filePath, width,
+        Bitmap bitmap = MediaUtils.decodeSampledBitmapFromFile(filePath, width,
                 width);
         try {
             ExifInterface exif = new ExifInterface(filePath);

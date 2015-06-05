@@ -25,15 +25,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.NCropListener;
-import vn.tungdx.mediapicker.NMediaItem;
-import vn.tungdx.mediapicker.NMediaOptions;
-import vn.tungdx.mediapicker.NMediaSelectedListener;
+import vn.tungdx.mediapicker.CropListener;
+import vn.tungdx.mediapicker.MediaItem;
+import vn.tungdx.mediapicker.MediaOptions;
+import vn.tungdx.mediapicker.MediaSelectedListener;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.imageloader.NImageLoader;
-import vn.tungdx.mediapicker.imageloader.NImageLoaderImpl;
+import vn.tungdx.mediapicker.imageloader.ImageLoader;
+import vn.tungdx.mediapicker.imageloader.ImageLoaderImpl;
 import vn.tungdx.mediapicker.utils.MessageUtils;
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
 
 
@@ -49,26 +49,26 @@ import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
  * <li>
  * Step1: Open media picker: <br/>
  * - If in activity use:
- * {@link NMediaPickerActivity#open(Activity, int, NMediaOptions)} or
- * {@link NMediaPickerActivity#open(Activity, int)}</li><br/>
+ * {@link MediaPickerActivity#open(Activity, int, MediaOptions)} or
+ * {@link MediaPickerActivity#open(Activity, int)}</li><br/>
  * <br/>
  * - If in fragment use:
- * {@link NMediaPickerActivity#open(Fragment, int, NMediaOptions)} or
- * {@link NMediaPickerActivity#open(Fragment, int)} <br/>
+ * {@link MediaPickerActivity#open(Fragment, int, MediaOptions)} or
+ * {@link MediaPickerActivity#open(Fragment, int)} <br/>
  * </li>
  * <li>
  * Step2: Get out media that selected in
  * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
  * that open media picker. Use
- * {@link NMediaPickerActivity#getNMediaItemSelected(Intent)} to get out media
+ * {@link MediaPickerActivity#getNMediaItemSelected(Intent)} to get out media
  * list that selected.</li>
  * <p/>
- * <i>Note: Videos or photos return back depends on {@link NMediaOptions} passed
- * to {@link #open(Activity, int, NMediaOptions)} </i></li>
+ * <i>Note: Videos or photos return back depends on {@link MediaOptions} passed
+ * to {@link #open(Activity, int, MediaOptions)} </i></li>
  * </ul>
  */
-public class NMediaPickerActivity extends ActionBarActivity implements
-        NMediaSelectedListener, NCropListener, FragmentManager.OnBackStackChangedListener,FragmentHost {
+public class MediaPickerActivity extends ActionBarActivity implements
+        MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener,FragmentHost {
     private static final String TAG = "NMediaPickerActivity";
 
     public static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
@@ -76,7 +76,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
      * Intent extra included when return back data in
      * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
      * that open media picker. Always return {@link ArrayList} of
-     * {@link NMediaItem}. You must always check null and size of this list
+     * {@link MediaItem}. You must always check null and size of this list
      * before handle your logic.
      */
     public static final String EXTRA_MEDIA_SELECTED = "extra_media_selected";
@@ -85,7 +85,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
 
     private static final String KEY_PHOTOFILE_CAPTURE = "key_photofile_capture";
 
-    private NMediaOptions mMediaOptions;
+    private MediaOptions mMediaOptions;
     private MenuItem mMediaSwitcher;
     private MenuItem mPhoto;
     private MenuItem mVideo;
@@ -95,56 +95,56 @@ public class NMediaPickerActivity extends ActionBarActivity implements
     private List<File> mFilesCreatedWhileCapturePhoto;
 
     /**
-     * Start {@link NMediaPickerActivity} in {@link Activity} to pick photo or
-     * video that depends on {@link NMediaOptions} passed.
+     * Start {@link MediaPickerActivity} in {@link Activity} to pick photo or
+     * video that depends on {@link MediaOptions} passed.
      *
      * @param activity
      * @param requestCode
      * @param options
      */
     public static void open(Activity activity, int requestCode,
-                            NMediaOptions options) {
-        Intent intent = new Intent(activity, NMediaPickerActivity.class);
+                            MediaOptions options) {
+        Intent intent = new Intent(activity, MediaPickerActivity.class);
         intent.putExtra(EXTRA_MEDIA_OPTIONS, options);
         activity.startActivityForResult(intent, requestCode);
     }
 
     /**
-     * Start {@link NMediaPickerActivity} in {@link Activity} with default media
-     * option: {@link NMediaOptions#createDefault()}
+     * Start {@link MediaPickerActivity} in {@link Activity} with default media
+     * option: {@link MediaOptions#createDefault()}
      *
      * @param activity
      * @param requestCode
      */
     public static void open(Activity activity, int requestCode) {
-        open(activity, requestCode, NMediaOptions.createDefault());
+        open(activity, requestCode, MediaOptions.createDefault());
     }
 
     /**
-     * Start {@link NMediaPickerActivity} in {@link Fragment} to pick photo or
-     * video that depends on {@link NMediaOptions} passed.
+     * Start {@link MediaPickerActivity} in {@link Fragment} to pick photo or
+     * video that depends on {@link MediaOptions} passed.
      *
      * @param fragment
      * @param requestCode
      * @param options
      */
     public static void open(Fragment fragment, int requestCode,
-                            NMediaOptions options) {
+                            MediaOptions options) {
         Intent intent = new Intent(fragment.getActivity(),
-                NMediaPickerActivity.class);
+                MediaPickerActivity.class);
         intent.putExtra(EXTRA_MEDIA_OPTIONS, options);
         fragment.startActivityForResult(intent, requestCode);
     }
 
     /**
-     * Start {@link NMediaPickerActivity} in {@link Fragment} with default media
-     * option: {@link NMediaOptions#createDefault()}
+     * Start {@link MediaPickerActivity} in {@link Fragment} with default media
+     * option: {@link MediaOptions#createDefault()}
      *
      * @param fragment
      * @param requestCode
      */
     public static void open(Fragment fragment, int requestCode) {
-        open(fragment, requestCode, NMediaOptions.createDefault());
+        open(fragment, requestCode, MediaOptions.createDefault());
     }
 
     @Override
@@ -173,7 +173,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container,
-                            NMediaPickerFragment.newInstance(mMediaOptions))
+                            MediaPickerFragment.newInstance(mMediaOptions))
                     .commit();
         }
         getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -219,8 +219,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         } else if (i == R.id.media_switcher) {
             Fragment activePage = getActivePage();
             if (mMediaOptions.canSelectPhotoAndVideo()
-                    && activePage instanceof NMediaPickerFragment) {
-                NMediaPickerFragment mediaPickerFragment = ((NMediaPickerFragment) activePage);
+                    && activePage instanceof MediaPickerFragment) {
+                MediaPickerFragment mediaPickerFragment = ((MediaPickerFragment) activePage);
                 mediaPickerFragment.switchMediaSelector();
                 syncIconMenu(mediaPickerFragment.getMediaType());
             }
@@ -228,34 +228,34 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         } else if (i == R.id.done) {
             Fragment activePage;
             activePage = getActivePage();
-            boolean isPhoto = ((NMediaPickerFragment) activePage)
-                    .getMediaType() == NMediaItem.PHOTO;
+            boolean isPhoto = ((MediaPickerFragment) activePage)
+                    .getMediaType() == MediaItem.PHOTO;
             if (isPhoto) {
                 if (mMediaOptions.isCropped()
                         && !mMediaOptions.canSelectMultiPhoto()) {
-                    if (activePage instanceof NMediaPickerFragment) {
+                    if (activePage instanceof MediaPickerFragment) {
                         // get first item in list (pos=0) because can only crop
                         // 1
                         // image at same time.
-                        NMediaItem mediaItem = new NMediaItem(NMediaItem.PHOTO,
-                                ((NMediaPickerFragment) activePage)
+                        MediaItem mediaItem = new MediaItem(MediaItem.PHOTO,
+                                ((MediaPickerFragment) activePage)
                                         .getMediaSelectedList().get(0)
                                         .getUriOrigin());
                         showCropFragment(mediaItem, mMediaOptions);
                     }
                 } else {
                     if (activePage != null)
-                        returnBackData(((NMediaPickerFragment) activePage)
+                        returnBackData(((MediaPickerFragment) activePage)
                                 .getMediaSelectedList());
                 }
             } else {
                 if (mMediaOptions.canSelectMultiVideo()) {
                     if (activePage != null)
-                        returnBackData(((NMediaPickerFragment) activePage)
+                        returnBackData(((MediaPickerFragment) activePage)
                                 .getMediaSelectedList());
                 } else {
                     // only get 1st item regardless of have many.
-                    returnVideo(((NMediaPickerFragment) activePage)
+                    returnVideo(((MediaPickerFragment) activePage)
                             .getMediaSelectedList().get(0).getUriOrigin());
                 }
             }
@@ -272,8 +272,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         outState.putSerializable(KEY_PHOTOFILE_CAPTURE, mPhotoFileCapture);
     }
     @Override
-    public NImageLoader getImageLoader() {
-        return new NImageLoaderImpl(getApplicationContext());
+    public ImageLoader getImageLoader() {
+        return new ImageLoaderImpl(getApplicationContext());
     }
 
     @Override
@@ -283,7 +283,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onHasSelected(List<NMediaItem> mediaSelectedList) {
+    public void onHasSelected(List<MediaItem> mediaSelectedList) {
         showDone();
     }
 
@@ -315,10 +315,10 @@ public class NMediaPickerActivity extends ActionBarActivity implements
 
     private void syncIconMenu(int mediaType) {
         switch (mediaType) {
-            case NMediaItem.PHOTO:
+            case MediaItem.PHOTO:
                 mMediaSwitcher.setIcon(R.drawable.ab_picker_video_2);
                 break;
-            case NMediaItem.VIDEO:
+            case MediaItem.VIDEO:
                 mMediaSwitcher.setIcon(R.drawable.ab_picker_camera2);
                 break;
             default:
@@ -326,10 +326,10 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         }
     }
 
-    private void returnBackData(List<NMediaItem> mediaSelectedList) {
+    private void returnBackData(List<MediaItem> mediaSelectedList) {
         Intent data = new Intent();
         data.putParcelableArrayListExtra(EXTRA_MEDIA_SELECTED,
-                (ArrayList<NMediaItem>) mediaSelectedList);
+                (ArrayList<MediaItem>) mediaSelectedList);
         setResult(Activity.RESULT_OK, data);
         finish();
     }
@@ -342,7 +342,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
             File file = mMediaOptions.getPhotoFile();
             if (file == null) {
                 try {
-                    file = NMediaUtils.createDefaultImageFile();
+                    file = MediaUtils.createDefaultImageFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -384,7 +384,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
                 max /= 1000;
                 takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, max);
                 if (mMediaOptions.isShowWarningVideoDuration()) {
-                    NMediaPickerErrorDialog dialog = NMediaPickerErrorDialog
+                    MediaPickerErrorDialog dialog = MediaPickerErrorDialog
                             .newInstance(MessageUtils
                                     .getWarningMessageVideoDuration(
                                             getApplicationContext(), max));
@@ -418,8 +418,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
             return;
         long captureSize = mPhotoFileCapture.length();
         for (File file : mFilesCreatedWhileCapturePhoto) {
-            if (NMediaUtils
-                    .isImageExtension(NMediaUtils.getFileExtension(file))
+            if (MediaUtils
+                    .isImageExtension(MediaUtils.getFileExtension(file))
                     && file.length() >= captureSize
                     && !file.equals(mPhotoFileCapture)) {
                 boolean value = mPhotoFileCapture.delete();
@@ -445,16 +445,16 @@ public class NMediaPickerActivity extends ActionBarActivity implements
                 case REQUEST_PHOTO_CAPTURE:
                     tryCorrectPhotoFileCaptured();
                     if (mPhotoFileCapture != null) {
-                        NMediaUtils.galleryAddPic(getApplicationContext(),
+                        MediaUtils.galleryAddPic(getApplicationContext(),
                                 mPhotoFileCapture);
                         if (mMediaOptions.isCropped()) {
-                            NMediaItem item = new NMediaItem(NMediaItem.PHOTO,
+                            MediaItem item = new MediaItem(MediaItem.PHOTO,
                                     Uri.fromFile(mPhotoFileCapture));
                             showCropFragment(item, mMediaOptions);
                         } else {
-                            NMediaItem item = new NMediaItem(NMediaItem.PHOTO,
+                            MediaItem item = new MediaItem(MediaItem.PHOTO,
                                     Uri.fromFile(mPhotoFileCapture));
-                            ArrayList<NMediaItem> list = new ArrayList<NMediaItem>();
+                            ArrayList<MediaItem> list = new ArrayList<MediaItem>();
                             list.add(item);
                             returnBackData(list);
                         }
@@ -469,8 +469,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         }
     }
 
-    private void showCropFragment(NMediaItem mediaItem, NMediaOptions options) {
-        Fragment fragment = NPhotoCropFragment.newInstance(mediaItem, options);
+    private void showCropFragment(MediaItem mediaItem, MediaOptions options) {
+        Fragment fragment = PhotoCropFragment.newInstance(mediaItem, options);
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction.replace(R.id.container, fragment);
@@ -480,8 +480,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onSuccess(NMediaItem mediaItem) {
-        List<NMediaItem> list = new ArrayList<NMediaItem>();
+    public void onSuccess(MediaItem mediaItem) {
+        List<MediaItem> list = new ArrayList<MediaItem>();
         list.add(mediaItem);
         returnBackData(list);
     }
@@ -499,13 +499,13 @@ public class NMediaPickerActivity extends ActionBarActivity implements
 
     public void syncActionbar() {
         Fragment fragment = getActivePage();
-        if (fragment instanceof NPhotoCropFragment) {
+        if (fragment instanceof PhotoCropFragment) {
             hideAllOptionsMenu();
             getSupportActionBar().hide();
-        } else if (fragment instanceof NMediaPickerFragment) {
+        } else if (fragment instanceof MediaPickerFragment) {
             getSupportActionBar().show();
             syncMediaOptions();
-            NMediaPickerFragment pickerFragment = (NMediaPickerFragment) fragment;
+            MediaPickerFragment pickerFragment = (MediaPickerFragment) fragment;
             syncIconMenu(pickerFragment.getMediaType());
             if (pickerFragment.hasMediaSelected()) {
                 showDone();
@@ -543,14 +543,14 @@ public class NMediaPickerActivity extends ActionBarActivity implements
         // try get duration using MediaPlayer. (Should get duration using
         // MediaPlayer before use Uri because some devices can get duration by
         // Uri or not exactly. Ex: Asus Memo Pad8)
-        long duration = NMediaUtils.getDuration(getApplicationContext(),
-                NMediaUtils.getRealVideoPathFromURI(getContentResolver(), videoUri));
+        long duration = MediaUtils.getDuration(getApplicationContext(),
+                MediaUtils.getRealVideoPathFromURI(getContentResolver(), videoUri));
         if (duration == 0) {
             // try get duration one more, by uri of video. Note: Some time can
             // not get duration by Uri after record video.(It's usually happen
             // in HTC
             // devices 2.3, maybe others)
-            duration = NMediaUtils
+            duration = MediaUtils
                     .getDuration(getApplicationContext(), videoUri);
         }
         // accept delta about < 1000 milliseconds. (ex: 10769 is still accepted
@@ -591,8 +591,8 @@ public class NMediaPickerActivity extends ActionBarActivity implements
                 break;
             // ok
             case 1:
-                NMediaItem item = new NMediaItem(NMediaItem.VIDEO, videoUri);
-                ArrayList<NMediaItem> list = new ArrayList<NMediaItem>();
+                MediaItem item = new MediaItem(MediaItem.VIDEO, videoUri);
+                ArrayList<MediaItem> list = new ArrayList<MediaItem>();
                 list.add(item);
                 returnBackData(list);
                 break;
@@ -603,7 +603,7 @@ public class NMediaPickerActivity extends ActionBarActivity implements
     }
 
     private void showVideoInvalid(String msg) {
-        NMediaPickerErrorDialog errorDialog = NMediaPickerErrorDialog
+        MediaPickerErrorDialog errorDialog = MediaPickerErrorDialog
                 .newInstance(msg);
         errorDialog.show(getSupportFragmentManager(), null);
     }
@@ -615,14 +615,14 @@ public class NMediaPickerActivity extends ActionBarActivity implements
      *
      * @param intent In {@link Activity#onActivityResult(int, int, Intent)} method of
      *               activity or fragment that open media picker.
-     * @return Always return {@link ArrayList} of {@link NMediaItem}. You must
+     * @return Always return {@link ArrayList} of {@link MediaItem}. You must
      * always check null and size of this list before handle your logic.
      */
-    public static ArrayList<NMediaItem> getNMediaItemSelected(Intent intent) {
+    public static ArrayList<MediaItem> getNMediaItemSelected(Intent intent) {
         if (intent == null)
             return null;
-        ArrayList<NMediaItem> mediaItemList = intent
-                .getParcelableArrayListExtra(NMediaPickerActivity.EXTRA_MEDIA_SELECTED);
+        ArrayList<MediaItem> mediaItemList = intent
+                .getParcelableArrayListExtra(MediaPickerActivity.EXTRA_MEDIA_SELECTED);
         return mediaItemList;
     }
 }

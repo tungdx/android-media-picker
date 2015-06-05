@@ -9,6 +9,6 @@ package vn.tungdx.mediapicker;
  * Listener used to for crop photo.
  *
  */
-public interface NCropListener {
-    public void onSuccess(NMediaItem mediaItem);
+public interface CropListener {
+    public void onSuccess(MediaItem mediaItem);
 }

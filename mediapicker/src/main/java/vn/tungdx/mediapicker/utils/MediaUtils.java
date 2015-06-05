@@ -29,7 +29,7 @@ import java.util.Locale;
 /**
  * Utility for Media Picker module.
  */
-public class NMediaUtils {
+public class MediaUtils {
     public static final String[] PROJECT_PHOTO = {MediaColumns._ID};
     public static final String[] PROJECT_VIDEO = {MediaColumns._ID};
 

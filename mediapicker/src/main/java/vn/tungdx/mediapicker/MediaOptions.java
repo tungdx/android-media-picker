@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 
 /**
  * @author TUNGDX
@@ -29,7 +29,7 @@ import vn.tungdx.mediapicker.utils.NMediaUtils;
  * Two methods to create instance :
  * <ul>
  * <li>
- * <code>new {@link NMediaOptions.Builder}.
+ * <code>new {@link MediaOptions.Builder}.
  * {@link Builder#canSelectMultiPhoto(boolean) canSelectMultiPhoto(boolean)}.
  * {@link Builder#setFixAspectRatio(boolean) setFixAspectRatio(boolean)}.
  * {@link Builder#setMaxVideoDuration(int) setMaxVideoDuration(int)}.{@link Builder#build() build()}<code>
@@ -38,7 +38,7 @@ import vn.tungdx.mediapicker.utils.NMediaUtils;
  * </ul>
  *
  */
-public class NMediaOptions implements Parcelable {
+public class MediaOptions implements Parcelable {
     private boolean canSelectMultiPhoto;
     private boolean canSelectMultiVideo;
     private boolean isCropped;
@@ -51,14 +51,14 @@ public class NMediaOptions implements Parcelable {
     private int aspectY;
     private boolean fixAspectRatio;
     private File croppedFile;
-    private List<NMediaItem> mediaListSelected = new ArrayList<NMediaItem>();
+    private List<MediaItem> mediaListSelected = new ArrayList<MediaItem>();
     private boolean showWarningVideoDuration;
 
     public boolean isShowWarningVideoDuration() {
         return showWarningVideoDuration;
     }
 
-    public List<NMediaItem> getMediaListSelected() {
+    public List<MediaItem> getMediaListSelected() {
         return mediaListSelected;
     }
 
@@ -122,7 +122,7 @@ public class NMediaOptions implements Parcelable {
         return photoCaptureFile;
     }
 
-    private NMediaOptions(Builder builder) {
+    private MediaOptions(Builder builder) {
         this.canSelectMultiPhoto = builder.canSelectMultiPhoto;
         this.canSelectMultiVideo = builder.canSelectMultiVideo;
         this.isCropped = builder.isCropped;
@@ -140,7 +140,7 @@ public class NMediaOptions implements Parcelable {
     }
 
     /**
-     * Create default {@link NMediaOptions} object.
+     * Create default {@link MediaOptions} object.
      * <p/>
      * With options:
      * <ul>
@@ -149,13 +149,13 @@ public class NMediaOptions implements Parcelable {
      *
      * @return
      */
-    public static NMediaOptions createDefault() {
+    public static MediaOptions createDefault() {
         return new Builder().build();
     }
 
     /**
      *
-     * Builder for {@link NMediaOptions}
+     * Builder for {@link MediaOptions}
      *
      */
     public static class Builder {
@@ -171,7 +171,7 @@ public class NMediaOptions implements Parcelable {
         private int aspectY = 1;
         private boolean fixAspectRatio = true;
         private File croppedFile;
-        private List<NMediaItem> mediaListSelected;
+        private List<MediaItem> mediaListSelected;
         private boolean showWarningBeforeRecord = false;
 
         public Builder() {
@@ -198,7 +198,7 @@ public class NMediaOptions implements Parcelable {
          * @param mediaSelecteds
          *            Media list selected before.
          */
-        public Builder setMediaListSelected(List<NMediaItem> mediaSelecteds) {
+        public Builder setMediaListSelected(List<MediaItem> mediaSelecteds) {
             this.mediaListSelected = mediaSelecteds;
             return this;
         }
@@ -208,7 +208,7 @@ public class NMediaOptions implements Parcelable {
          * @param file
          *            Use for save image that cropped. Default image cropped
          *            saved in file that created by
-         *            {@link NMediaUtils#createTempFile(android.content.Context)}
+         *            {@link MediaUtils#createTempFile(android.content.Context)}
          *            <p/>
          *            <i>Note: file should not exist when pass to this method.
          *            Because if user cancels capture photo, this file will be
@@ -254,7 +254,7 @@ public class NMediaOptions implements Parcelable {
 
         /**
          * Crop photo before return back photo. Not effective for video or set
-         * {@link NMediaOptions.Builder#canSelectMultiPhoto(boolean)} method's
+         * {@link MediaOptions.Builder#canSelectMultiPhoto(boolean)} method's
          * parameter =true.
          *
          * @param isCropped
@@ -372,7 +372,7 @@ public class NMediaOptions implements Parcelable {
          *            Use for save image that capture from camera. Default image
          *            saved in {@link Environment#DIRECTORY_PICTURES} folder of
          *            device, file create by
-         *            {@link NMediaUtils#createDefaultImageFile()}<br/>
+         *            {@link MediaUtils#createDefaultImageFile()}<br/>
          *            <b>Note:</b><br/>
          *            - File should not exist when pass to this method. Because
          *            if use cancle capture photo, this file will be temporary.<br/>
@@ -387,12 +387,12 @@ public class NMediaOptions implements Parcelable {
         }
 
         /**
-         * Build configured {@link NMediaOptions} object.
+         * Build configured {@link MediaOptions} object.
          *
          * @return
          */
-        public NMediaOptions build() {
-            return new NMediaOptions(this);
+        public MediaOptions build() {
+            return new MediaOptions(this);
         }
     }
 
@@ -419,7 +419,7 @@ public class NMediaOptions implements Parcelable {
         dest.writeTypedList(mediaListSelected);
     }
 
-    public NMediaOptions(Parcel in) {
+    public MediaOptions(Parcel in) {
         canSelectMultiPhoto = in.readInt() == 0 ? false : true;
         canSelectMultiVideo = in.readInt() == 0 ? false : true;
         canSelectPhoto = in.readInt() == 0 ? false : true;
@@ -433,19 +433,19 @@ public class NMediaOptions implements Parcelable {
         aspectY = in.readInt();
         this.photoCaptureFile = (File) in.readSerializable();
         this.croppedFile = (File) in.readSerializable();
-        in.readTypedList(this.mediaListSelected, NMediaItem.CREATOR);
+        in.readTypedList(this.mediaListSelected, MediaItem.CREATOR);
     }
 
-    public static final Creator<NMediaOptions> CREATOR = new Creator<NMediaOptions>() {
+    public static final Creator<MediaOptions> CREATOR = new Creator<MediaOptions>() {
 
         @Override
-        public NMediaOptions[] newArray(int size) {
-            return new NMediaOptions[size];
+        public MediaOptions[] newArray(int size) {
+            return new MediaOptions[size];
         }
 
         @Override
-        public NMediaOptions createFromParcel(Parcel source) {
-            return new NMediaOptions(source);
+        public MediaOptions createFromParcel(Parcel source) {
+            return new MediaOptions(source);
         }
     };
 
@@ -470,7 +470,7 @@ public class NMediaOptions implements Parcelable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        NMediaOptions other = (NMediaOptions) obj;
+        MediaOptions other = (MediaOptions) obj;
         if (canSelectMultiPhoto != other.canSelectMultiPhoto)
             return false;
         if (canSelectPhoto != other.canSelectPhoto)

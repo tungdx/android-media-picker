@@ -7,8 +7,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import vn.tungdx.mediapicker.activities.NMediaPickerActivity;
-import vn.tungdx.mediapicker.utils.NMediaUtils;
+import vn.tungdx.mediapicker.activities.MediaPickerActivity;
+import vn.tungdx.mediapicker.utils.MediaUtils;
 
 /**
  * @author TUNGDX
@@ -16,9 +16,9 @@ import vn.tungdx.mediapicker.utils.NMediaUtils;
 
 /**
  * Contains information of photo or video that selected and return back in
- * {@link NMediaPickerActivity}
+ * {@link MediaPickerActivity}
  */
-public class NMediaItem implements Parcelable {
+public class MediaItem implements Parcelable {
     public static final int PHOTO = 1;
     public static final int VIDEO = 2;
     private int type;
@@ -29,7 +29,7 @@ public class NMediaItem implements Parcelable {
      * @param mediaType Whether {@link #PHOTO} or {@link #VIDEO}
      * @param uriOrigin {@link Uri} of media item.
      */
-    public NMediaItem(int mediaType, Uri uriOrigin) {
+    public MediaItem(int mediaType, Uri uriOrigin) {
         this.type = mediaType;
         this.uriOrigin = uriOrigin;
     }
@@ -94,7 +94,7 @@ public class NMediaItem implements Parcelable {
         }
     }
 
-    public NMediaItem(Parcel in) {
+    public MediaItem(Parcel in) {
         this.type = in.readInt();
         String crop = in.readString();
         if (!TextUtils.isEmpty(crop))
@@ -104,16 +104,16 @@ public class NMediaItem implements Parcelable {
             this.uriOrigin = Uri.parse(origin);
     }
 
-    public static final Creator<NMediaItem> CREATOR = new Creator<NMediaItem>() {
+    public static final Creator<MediaItem> CREATOR = new Creator<MediaItem>() {
 
         @Override
-        public NMediaItem[] newArray(int size) {
-            return new NMediaItem[size];
+        public MediaItem[] newArray(int size) {
+            return new MediaItem[size];
         }
 
         @Override
-        public NMediaItem createFromParcel(Parcel source) {
-            return new NMediaItem(source);
+        public MediaItem createFromParcel(Parcel source) {
+            return new MediaItem(source);
         }
     };
 
@@ -136,7 +136,7 @@ public class NMediaItem implements Parcelable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        NMediaItem other = (NMediaItem) obj;
+        MediaItem other = (MediaItem) obj;
         if (uriCropped == null) {
             if (other.uriCropped != null)
                 return false;
@@ -180,10 +180,10 @@ public class NMediaItem implements Parcelable {
             return uri.getPath();
         } else if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
             if (isPhoto()) {
-                return NMediaUtils.getRealImagePathFromURI(
+                return MediaUtils.getRealImagePathFromURI(
                         context.getContentResolver(), uri);
             } else {
-                return NMediaUtils.getRealVideoPathFromURI(
+                return MediaUtils.getRealVideoPathFromURI(
                         context.getContentResolver(), uri);
             }
         }

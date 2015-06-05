@@ -8,8 +8,10 @@
 
 
     <style name="MediaPickerTheme" parent="Theme.AppCompat">
-        <item name="android:actionMenuTextColor">@color/picker_color</item>
-        <item name="android:windowActionBarOverlay">true</item>
+
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+        <item name="actionMenuTextColor">@color/picker_color</item>
         <item name="android:textSize">14sp</item>
         <item name="android:divider">@android:color/white</item>
     </style>

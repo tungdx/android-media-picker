@@ -15,12 +15,12 @@ import vn.tungdx.mediapicker.R;
 /**
  * Create dialog for media picker module. Should only use in this module.
  */
-public class NMediaPickerErrorDialog extends DialogFragment {
+public class MediaPickerErrorDialog extends DialogFragment {
     private String mMessage;
     private OnClickListener mOnPositionClickListener;
 
-    public static NMediaPickerErrorDialog newInstance(String msg) {
-        NMediaPickerErrorDialog dialog = new NMediaPickerErrorDialog();
+    public static MediaPickerErrorDialog newInstance(String msg) {
+        MediaPickerErrorDialog dialog = new MediaPickerErrorDialog();
         Bundle bundle = new Bundle();
         bundle.putString("msg", msg);
         dialog.setArguments(bundle);
