@@ -1,18 +1,17 @@
 package vn.tungdx.mediapickersample;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,7 +28,6 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
     private static final String TAG = "DemoActivity";
 
     private static final int REQUEST_MEDIA = 100;
-    private TextView mMessage;
     private LinearLayout mLinearLayout;
     private List<MediaItem> mMediaSelectedList;
 
@@ -37,24 +35,8 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-
-        mMessage = (TextView) findViewById(R.id.textView1);
         mLinearLayout = (LinearLayout) findViewById(R.id.list_image);
-        findViewById(R.id.all_default).setOnClickListener(this);
-        findViewById(R.id.select_crop).setOnClickListener(this);
-        findViewById(R.id.select_crop_file).setOnClickListener(this);
-        findViewById(R.id.select_crop_xy).setOnClickListener(this);
-        findViewById(R.id.select_crop_not_fix_ratio).setOnClickListener(this);
-        findViewById(R.id.select_pass_selected).setOnClickListener(this);
-        findViewById(R.id.select_only_video).setOnClickListener(this);
-        findViewById(R.id.select_only_video_max_duration).setOnClickListener(
-                this);
-        findViewById(R.id.select_only_video_min_duration).setOnClickListener(
-                this);
-        findViewById(R.id.select_only_video_max_duration_warning)
-                .setOnClickListener(this);
-        findViewById(R.id.select_both_video_photo).setOnClickListener(this);
-        findViewById(R.id.showfragment).setOnClickListener(this);
+        findViewById(R.id.pick).setOnClickListener(this);
     }
 
 
@@ -66,103 +48,89 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
                 mMediaSelectedList = MediaPickerActivity
                         .getMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
-
-                    StringBuilder builder = new StringBuilder();
                     for (MediaItem mediaItem : mMediaSelectedList) {
-                        Log.i(TAG, mediaItem.toString());
-                        builder.append(mediaItem.toString());
-                        builder.append(", PathOrigin=");
-                        builder.append(mediaItem
-                                .getPathOrigin(getApplicationContext()));
-                        builder.append(", PathCropped=");
-                        builder.append(mediaItem
-                                .getPathCropped(getApplicationContext()));
-                        builder.append("\n\n");
-
                         addImages(mediaItem);
                     }
-                    mMessage.setText(builder.toString());
                 } else {
                     Log.e(TAG, "Error to get media, NULL");
                 }
-            } else {
-                Log.e(TAG, "Get media cancled.");
             }
         }
     }
 
     private void addImages(MediaItem mediaItem) {
-        ImageView imageView = new ImageView(getApplicationContext());
-        LayoutParams params = new LayoutParams(180, 180);
-        imageView.setLayoutParams(params);
-        mLinearLayout.addView(imageView);
+        LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.item, null);
 
+        ImageView imageView = (ImageView) root.findViewById(R.id.image);
+        TextView textView = (TextView) root.findViewById(R.id.textView);
+
+        String info = String.format("Original Uri [%s]\nOriginal Path [%s] \n\nCropped Uri [%s] \nCropped Path[%s]", mediaItem.getUriOrigin(), mediaItem.getUriCropped(), mediaItem.getPathOrigin(this), mediaItem.getPathCropped(this));
+        textView.setText(info);
         if (mediaItem.getUriCropped() == null) {
-//            Picasso.with(getApplicationContext()).load(mediaItem.getUriOrigin()).into(imageView);
-            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(),imageView);
+            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(), imageView);
         } else {
-//            Picasso.with(getApplicationContext()).load(mediaItem.getUriCropped()).into(imageView);
             ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
         }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.topMargin = 5;
+        mLinearLayout.addView(root, params);
     }
 
-    @Override
-    public void onClick(View v) {
+    private void handleOption(int option) {
         MediaOptions.Builder builder = new MediaOptions.Builder();
         MediaOptions options = null;
-        switch (v.getId()) {
-            case R.id.all_default:
+        switch (option) {
+            case 0:
                 options = MediaOptions.createDefault();
                 break;
-            case R.id.select_crop:
+            case 1:
                 options = builder.setIsCropped(true).setFixAspectRatio(true)
                         .build();
                 break;
-            case R.id.select_crop_file:
+            case 2:
                 File file = new File(
                         getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                         new Random().nextLong() + ".jpg");
                 options = builder.setIsCropped(true).setFixAspectRatio(true)
                         .setCroppedFile(file).build();
                 break;
-            case R.id.select_crop_xy:
+            case 3:
                 options = builder.setIsCropped(true).setFixAspectRatio(true)
                         .setAspectX(3).setAspectY(1).build();
                 break;
-            case R.id.select_crop_not_fix_ratio:
+            case 4:
                 options = builder.setIsCropped(true).setFixAspectRatio(false)
                         .build();
                 break;
 
-            case R.id.select_only_video:
+            case 5:
                 options = builder.selectVideo().canSelectMultiVideo(true).build();
                 break;
-            case R.id.select_only_video_max_duration:
+            case 6:
                 options = builder.selectVideo().setMaxVideoDuration(3 * 1000)
                         .build();
                 break;
-            case R.id.select_only_video_min_duration:
+            case 7:
                 options = builder.selectVideo().setMinVideoDuration(2 * 1000)
                         .build();
                 break;
-            case R.id.select_only_video_max_duration_warning:
+            case 8:
                 options = builder.selectVideo().setMaxVideoDuration(3 * 1000)
                         .setShowWarningBeforeRecordVideo(true).build();
                 break;
-            case R.id.select_both_video_photo:
+            case 9:
                 options = builder.canSelectBothPhotoVideo()
                         .canSelectMultiPhoto(true).canSelectMultiVideo(true)
                         .build();
                 break;
-            case R.id.select_pass_selected:
+            case 10:
                 options = builder.canSelectMultiPhoto(true)
                         .canSelectMultiVideo(true).canSelectBothPhotoVideo()
                         .setMediaListSelected(mMediaSelectedList).build();
                 break;
-            case R.id.showfragment:
-                showFragment(new DemoFragment());
-                break;
-            default:
+            case 11:
+                Intent intent = new Intent(this, DemoFragmentActivity.class);
+                startActivity(intent);
                 break;
         }
         if (options != null) {
@@ -171,26 +139,26 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         }
     }
 
-    private void showFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager
-                .beginTransaction();
-        fragmentTransaction.replace(R.id.container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.pick:
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                dialogBuilder.setTitle("Select option")
+                        .setItems(R.array.options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                handleOption(which);
+                            }
+                        });
+                dialogBuilder.show();
+                break;
+            default:
+                break;
+        }
     }
 
     private void clearImages() {
         mLinearLayout.removeAllViews();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }

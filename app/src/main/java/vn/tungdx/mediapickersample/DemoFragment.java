@@ -3,15 +3,14 @@ package vn.tungdx.mediapickersample;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,7 +24,6 @@ import vn.tungdx.mediapicker.activities.MediaPickerActivity;
 public class DemoFragment extends Fragment {
     private static final int REQUEST_MEDIA = 100;
     private static final String TAG = "DemoMediaPickerFragment";
-    private TextView mMessage;
     private LinearLayout mLinearLayout;
 
     @Override
@@ -36,20 +34,18 @@ public class DemoFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getView().findViewById(R.id.all_default).setOnClickListener(
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.all_default).setOnClickListener(
                 new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        MediaPickerActivity.open(DemoFragment.this,
-                                REQUEST_MEDIA);
+                        MediaPickerActivity.open(DemoFragment.this, REQUEST_MEDIA);
                         clearImages();
                     }
                 });
-        mMessage = (TextView) getView().findViewById(R.id.textView1);
-        mLinearLayout = (LinearLayout) getView().findViewById(R.id.list_image);
+        mLinearLayout = (LinearLayout) view.findViewById(R.id.list_image);
     }
 
     @Override
@@ -58,45 +54,28 @@ public class DemoFragment extends Fragment {
         ArrayList<MediaItem> mMediaSelectedList;
         if (requestCode == REQUEST_MEDIA) {
             if (resultCode == Activity.RESULT_OK) {
-                mMediaSelectedList = MediaPickerActivity
-                        .getMediaItemSelected(data);
+                mMediaSelectedList = MediaPickerActivity.getMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
-
-                    StringBuilder builder = new StringBuilder();
-                    for (MediaItem mediaItem : mMediaSelectedList) {
-                        Log.i(TAG, mediaItem.toString());
-                        builder.append(mediaItem.toString());
-                        builder.append(", PathOrigin=");
-                        builder.append(mediaItem.getPathOrigin(getActivity()));
-                        builder.append(", PathCropped=");
-                        builder.append(mediaItem.getPathCropped(getActivity()));
-                        builder.append("\n\n");
-
-                        addImages(mediaItem);
-                    }
-                    mMessage.setText(builder.toString());
-                } else {
-                    Log.e(TAG, "Error to get media, NULL");
+                    addImages(mMediaSelectedList.get(0));
                 }
-            } else {
-                Log.e(TAG, "Get media cancled.");
             }
         }
     }
 
     private void addImages(MediaItem mediaItem) {
-        ImageView imageView = new ImageView(getActivity());
-        LayoutParams params = new LayoutParams(180, 180);
-        imageView.setLayoutParams(params);
-        mLinearLayout.addView(imageView);
+        LinearLayout root = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item, null);
 
+        ImageView imageView = (ImageView) root.findViewById(R.id.image);
+        TextView textView = (TextView) root.findViewById(R.id.textView);
+
+        String info = String.format("Original Uri [%s]\nOriginal Path [%s] \n\nCropped Uri [%s] \nCropped Path[%s]", mediaItem.getUriOrigin(), mediaItem.getUriCropped(), mediaItem.getPathOrigin(getActivity()), mediaItem.getPathCropped(getActivity()));
+        textView.setText(info);
         if (mediaItem.getUriCropped() == null) {
-//            Picasso.with(getActivity()).load(mediaItem.getUriOrigin()).into(imageView);
             ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(), imageView);
         } else {
-//            Picasso.with(getActivity()).load(mediaItem.getUriCropped()).into(imageView);
             ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
         }
+        mLinearLayout.addView(root);
     }
 
     private void clearImages() {

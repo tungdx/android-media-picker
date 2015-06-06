@@ -2,30 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:orientation="vertical" >
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <LinearLayout
-            android:id="@+id/list_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Demo using MediaPicker in Fragment" />
 
     <Button
         android:id="@+id/all_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="All defaults" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:text="Default options" />
+
+    <LinearLayout
+        android:id="@+id/list_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
 </LinearLayout>
