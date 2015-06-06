@@ -14,7 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +32,8 @@ import vn.tungdx.mediapicker.MediaSelectedListener;
 import vn.tungdx.mediapicker.R;
 import vn.tungdx.mediapicker.imageloader.ImageLoader;
 import vn.tungdx.mediapicker.imageloader.ImageLoaderImpl;
-import vn.tungdx.mediapicker.utils.MessageUtils;
 import vn.tungdx.mediapicker.utils.MediaUtils;
+import vn.tungdx.mediapicker.utils.MessageUtils;
 import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
 
 
@@ -67,7 +67,7 @@ import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
  * to {@link #open(Activity, int, MediaOptions)} </i></li>
  * </ul>
  */
-public class MediaPickerActivity extends ActionBarActivity implements
+public class MediaPickerActivity extends AppCompatActivity implements
         MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener,FragmentHost {
     private static final String TAG = "NMediaPickerActivity";
 

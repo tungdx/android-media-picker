@@ -1,15 +1,8 @@
 <resources>
 
-    <string name="app_name">NTQBaseProject</string>
     <string name="waiting">Waiting&#8230;</string>
-    <string name="cancle">Cancle</string>
+    <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="ok">OK</string>
-    <string name="retry">Retry</string>
-    <string name="error_no_connection">No internet</string>
-    <string name="error_timeout">Timeout</string>
-    <string name="error_server">Server error</string>
-    <string name="error_authenticate">Authenticate error</string>
-    <string name="error_unknown">Unknow error</string>
 
 </resources>

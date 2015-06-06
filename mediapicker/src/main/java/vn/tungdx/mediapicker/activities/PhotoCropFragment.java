@@ -100,7 +100,7 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
         mCropImageView = (CropImageView) view.findViewById(R.id.crop);
         mRotateLeft = view.findViewById(R.id.rotate_left);
         mRotateRight = view.findViewById(R.id.rotate_right);
-        mCancle = view.findViewById(R.id.cancle);
+        mCancle = view.findViewById(R.id.cancel);
         mSave = view.findViewById(R.id.save);
 
         mRotateLeft.setOnClickListener(this);
@@ -156,7 +156,7 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
                 e.printStackTrace();
             }
 
-        } else if (i == R.id.cancle) {
+        } else if (i == R.id.cancel) {
             getFragmentManager().popBackStack();
 
         } else if (i == R.id.save) {
