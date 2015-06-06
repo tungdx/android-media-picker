@@ -43,17 +43,16 @@ import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
  */
 
 /**
- * Activity use for pick photos or videos (media).
+ * Use this activity for pickup photos or videos (media).
  * <p/>
  * How to use:
  * <ul>
  * <li>
  * Step1: Open media picker: <br/>
- * - If in activity use:
+ * - If using in activity use:
  * {@link MediaPickerActivity#open(Activity, int, MediaOptions)} or
- * {@link MediaPickerActivity#open(Activity, int)}</li><br/>
- * <br/>
- * - If in fragment use:
+ * {@link MediaPickerActivity#open(Activity, int)}</li>
+ * - If using in fragment use:
  * {@link MediaPickerActivity#open(Fragment, int, MediaOptions)} or
  * {@link MediaPickerActivity#open(Fragment, int)} <br/>
  * </li>
@@ -61,7 +60,7 @@ import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
  * Step2: Get out media that selected in
  * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
  * that open media picker. Use
- * {@link MediaPickerActivity#getNMediaItemSelected(Intent)} to get out media
+ * {@link MediaPickerActivity#getMediaItemSelected(Intent)} to get out media
  * list that selected.</li>
  * <p/>
  * <i>Note: Videos or photos return back depends on {@link MediaOptions} passed
@@ -235,26 +234,20 @@ public class MediaPickerActivity extends AppCompatActivity implements
             if (isPhoto) {
                 if (mMediaOptions.isCropped()
                         && !mMediaOptions.canSelectMultiPhoto()) {
-                    if (activePage instanceof MediaPickerFragment) {
-                        // get first item in list (pos=0) because can only crop
-                        // 1
-                        // image at same time.
-                        MediaItem mediaItem = new MediaItem(MediaItem.PHOTO,
-                                ((MediaPickerFragment) activePage)
-                                        .getMediaSelectedList().get(0)
-                                        .getUriOrigin());
-                        showCropFragment(mediaItem, mMediaOptions);
-                    }
+                    // get first item in list (pos=0) because can only crop 1 image at same time.
+                    MediaItem mediaItem = new MediaItem(MediaItem.PHOTO,
+                            ((MediaPickerFragment) activePage)
+                                    .getMediaSelectedList().get(0)
+                                    .getUriOrigin());
+                    showCropFragment(mediaItem, mMediaOptions);
                 } else {
-                    if (activePage != null)
-                        returnBackData(((MediaPickerFragment) activePage)
-                                .getMediaSelectedList());
+                    returnBackData(((MediaPickerFragment) activePage)
+                            .getMediaSelectedList());
                 }
             } else {
                 if (mMediaOptions.canSelectMultiVideo()) {
-                    if (activePage != null)
-                        returnBackData(((MediaPickerFragment) activePage)
-                                .getMediaSelectedList());
+                    returnBackData(((MediaPickerFragment) activePage)
+                            .getMediaSelectedList());
                 } else {
                     // only get 1st item regardless of have many.
                     returnVideo(((MediaPickerFragment) activePage)
@@ -262,7 +255,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
                 }
             }
             return true;
-        } else {
         }
         return super.onOptionsItemSelected(item);
     }
@@ -611,7 +603,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
      * @return Always return {@link ArrayList} of {@link MediaItem}. You must
      * always check null and size of this list before handle your logic.
      */
-    public static ArrayList<MediaItem> getNMediaItemSelected(Intent intent) {
+    public static ArrayList<MediaItem> getMediaItemSelected(Intent intent) {
         if (intent == null)
             return null;
         ArrayList<MediaItem> mediaItemList = intent

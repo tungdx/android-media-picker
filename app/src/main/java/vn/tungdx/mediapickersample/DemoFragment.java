@@ -59,7 +59,7 @@ public class DemoFragment extends Fragment {
         if (requestCode == REQUEST_MEDIA) {
             if (resultCode == Activity.RESULT_OK) {
                 mMediaSelectedList = MediaPickerActivity
-                        .getNMediaItemSelected(data);
+                        .getMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
 
                     StringBuilder builder = new StringBuilder();
