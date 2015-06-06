@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
@@ -94,6 +95,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
     private File mPhotoFileCapture;
     private List<File> mFilesCreatedWhileCapturePhoto;
     private RecursiveFileObserver mFileObserver;
+    private FileObserverTask mFileObserverTask;
 
     /**
      * Start {@link MediaPickerActivity} in {@link Activity} to pick photo or
@@ -199,7 +201,8 @@ public class MediaPickerActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         getSupportFragmentManager().removeOnBackStackChangedListener(this);
-        mFileObserver = null;
+        cancelFileObserverTask();
+        stopWatchingFile();
         mFilesCreatedWhileCapturePhoto = null;
     }
 
@@ -347,17 +350,11 @@ public class MediaPickerActivity extends AppCompatActivity implements
             }
             if (file != null) {
                 mPhotoFileCapture = file;
-                if (mFileObserver == null) {
-                    mFileObserver = new RecursiveFileObserver(Environment
-                            .getExternalStorageDirectory().getAbsolutePath(),
-                            FileObserver.CREATE);
-                    mFileObserver
-                            .setFileCreatedListener(mOnFileCreatedListener);
-                }
-                mFileObserver.startWatching();
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(file));
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
+                mFileObserverTask = new FileObserverTask();
+                mFileObserverTask.execute();
             }
         }
     }
@@ -434,10 +431,8 @@ public class MediaPickerActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mFileObserver != null) {
-            mFileObserver.stopWatching();
-            mFileObserver = null;
-        }
+        cancelFileObserverTask();
+        stopWatchingFile();
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_PHOTO_CAPTURE:
@@ -622,5 +617,36 @@ public class MediaPickerActivity extends AppCompatActivity implements
         ArrayList<MediaItem> mediaItemList = intent
                 .getParcelableArrayListExtra(MediaPickerActivity.EXTRA_MEDIA_SELECTED);
         return mediaItemList;
+    }
+
+    private class FileObserverTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (isCancelled()) return null;
+            if (mFileObserver == null) {
+                mFileObserver = new RecursiveFileObserver(Environment
+                        .getExternalStorageDirectory().getAbsolutePath(),
+                        FileObserver.CREATE);
+                mFileObserver
+                        .setFileCreatedListener(mOnFileCreatedListener);
+            }
+            mFileObserver.startWatching();
+            return null;
+        }
+    }
+
+    private void cancelFileObserverTask() {
+        if (mFileObserverTask != null) {
+            mFileObserverTask.cancel(true);
+            mFileObserver = null;
+        }
+    }
+
+    private void stopWatchingFile() {
+        if (mFileObserver != null) {
+            mFileObserver.stopWatching();
+            mFileObserver = null;
+        }
     }
 }

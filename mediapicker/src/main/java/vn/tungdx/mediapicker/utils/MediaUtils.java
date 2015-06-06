@@ -100,7 +100,6 @@ public class MediaUtils {
             return null;
 
         String newpath = null;
-        Log.e("NMediaUtils", "getCount=" + cursor.getCount());
         if (cursor.getCount() >= 2) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
                     .moveToNext()) {
@@ -114,8 +113,6 @@ public class MediaUtils {
                             Images.Media._ID + "=?",
                             new String[]{Long.toString(id)});
                     boolean ok = fileCapture.delete();
-                    Log.i("NMediaUtils",
-                            String.format("rows=%s and delete=%s", rows, ok));
 
                 } else {
                     newpath = data;
@@ -123,7 +120,7 @@ public class MediaUtils {
             }
         } else {
             newpath = fileCapture.getPath();
-            Log.e("NMediaUtils", "Not found duplicate.");
+            Log.e("MediaUtils", "Not found duplicate.");
         }
 
         cursor.close();
@@ -229,8 +226,7 @@ public class MediaUtils {
             mMediaPlayer.prepare();
             duration = mMediaPlayer.getDuration();
         } catch (Exception e) {
-            if (e != null)
-                e.printStackTrace();
+            e.printStackTrace();
         } finally {
             if (mMediaPlayer != null) {
                 mMediaPlayer.reset();
