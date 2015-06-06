@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Demo using MediaPicker in Fragment" />
+        android:text="Using in Fragment" />
 
     <Button
         android:id="@+id/all_default"

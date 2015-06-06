@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +24,7 @@ import vn.tungdx.mediapicker.MediaItem;
 import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.activities.MediaPickerActivity;
 
-public class DemoActivity extends FragmentActivity implements OnClickListener {
+public class DemoActivity extends AppCompatActivity implements OnClickListener {
     private static final String TAG = "DemoActivity";
 
     private static final int REQUEST_MEDIA = 100;
@@ -76,7 +76,7 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         mLinearLayout.addView(root, params);
     }
 
-    private void handleOption(int option) {
+    private void handleOptionDemoSelected(int option) {
         MediaOptions.Builder builder = new MediaOptions.Builder();
         MediaOptions options = null;
         switch (option) {
@@ -144,11 +144,11 @@ public class DemoActivity extends FragmentActivity implements OnClickListener {
         switch (v.getId()) {
             case R.id.pick:
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                dialogBuilder.setTitle("Select option")
+                dialogBuilder.setTitle(getString(R.string.select_demo))
                         .setItems(R.array.options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                handleOption(which);
+                                handleOptionDemoSelected(which);
                             }
                         });
                 dialogBuilder.show();

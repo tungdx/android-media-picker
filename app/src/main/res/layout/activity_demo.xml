@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Demo using MediaPicker in Activity" />
+            android:text="Using in Activity" />
 
         <Button
             android:layout_marginTop="5dp"
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Pick photos or videos" />
+            android:text="Select demo" />
 
         <ScrollView
             android:layout_width="match_parent"

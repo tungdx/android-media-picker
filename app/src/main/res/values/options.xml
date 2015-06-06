@@ -10,8 +10,8 @@
         <item>Select videos and set max duration</item>
         <item>Select videos and set min duration</item>
         <item>Select videos and set max duration AND show warning before record</item>
-        <item>Select both photos vs video</item>
-        <item>Pass media list selected</item>
-        <item>Test NMediaPicker in Fragment</item>
+        <item>Select photos or videos</item>
+        <item>Display photos or videos that were pre selected</item>
+        <item>Using MediaPicker in Fragment</item>
     </string-array>
 </resources>
