@@ -21,8 +21,6 @@ public class PickerImageView extends ImageView {
     private Paint paintBorder;
 
     private boolean isSelected;
-    private int mediaType;
-    private int order;
     private int borderSize = 1;
 
     public PickerImageView(Context context, AttributeSet attrs, int defStyle) {
@@ -55,24 +53,8 @@ public class PickerImageView extends ImageView {
         }
     }
 
-    public void setMediaType(int mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
     public boolean isSelected() {
         return isSelected;
-    }
-
-    public int getMediaType() {
-        return mediaType;
-    }
-
-    public int getOrder() {
-        return order;
     }
 
     @Override
@@ -94,5 +76,4 @@ public class PickerImageView extends ImageView {
                     getHeight(), paintBorder);
         }
     }
-
 }

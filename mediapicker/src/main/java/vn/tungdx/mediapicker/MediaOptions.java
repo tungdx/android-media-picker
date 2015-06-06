@@ -485,5 +485,4 @@ public class MediaOptions implements Parcelable {
             return false;
         return true;
     }
-
 }

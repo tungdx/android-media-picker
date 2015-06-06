@@ -68,7 +68,6 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
         if (isSelected) {
             mPickerImageViewSelected.add(holder.imageView);
         }
-        holder.imageView.setMediaType(mMediaType);
         mImageLoader.displayImage(uri, holder.imageView);
     }
 
@@ -95,7 +94,7 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     }
 
     public boolean hasSelected() {
-        return mMediaListSelected.size() > 0 ? true : false;
+        return mMediaListSelected.size() > 0;
     }
 
     /**

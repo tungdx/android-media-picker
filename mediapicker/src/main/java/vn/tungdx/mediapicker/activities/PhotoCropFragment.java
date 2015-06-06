@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.edmodo.cropper.CropImageView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,7 +29,6 @@ import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.R;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.Utils;
-import com.edmodo.cropper.CropImageView;
 /**
  * @author TUNGDX
  */
@@ -44,7 +45,7 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
     private MediaItem mMediaItemSelected;
     private CropImageView mCropImageView;
     private View mRotateLeft, mRotateRight;
-    private View mCancle;
+    private View mCancel;
     private View mSave;
     private ProgressDialog mDialog;
     private SaveFileCroppedTask mSaveFileCroppedTask;
@@ -100,13 +101,13 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
         mCropImageView = (CropImageView) view.findViewById(R.id.crop);
         mRotateLeft = view.findViewById(R.id.rotate_left);
         mRotateRight = view.findViewById(R.id.rotate_right);
-        mCancle = view.findViewById(R.id.cancel);
+        mCancel = view.findViewById(R.id.cancel);
         mSave = view.findViewById(R.id.save);
 
         mRotateLeft.setOnClickListener(this);
         mRotateRight.setOnClickListener(this);
         mSave.setOnClickListener(this);
-        mCancle.setOnClickListener(this);
+        mCancel.setOnClickListener(this);
     }
 
     @Override
@@ -250,7 +251,7 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
         mCropImageView = null;
         mDialog = null;
         mSave = null;
-        mCancle = null;
+        mCancel = null;
         mRotateLeft = null;
         mRotateRight = null;
     }

@@ -20,8 +20,6 @@ public class RecursiveFileObserver extends FileObserver {
 
     private OnFileCreatedListener mFileCreatedListener;
 
-    public static int CHANGES_ONLY = CLOSE_WRITE | MOVE_SELF | MOVED_FROM;
-
     List<SingleFileObserver> mObservers;
     String mPath;
     int mMask;

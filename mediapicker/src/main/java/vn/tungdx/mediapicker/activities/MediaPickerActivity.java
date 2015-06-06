@@ -68,8 +68,8 @@ import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
  * </ul>
  */
 public class MediaPickerActivity extends AppCompatActivity implements
-        MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener,FragmentHost {
-    private static final String TAG = "NMediaPickerActivity";
+        MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener, FragmentHost {
+    private static final String TAG = "MediaPickerActivity";
 
     public static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
     /**
@@ -93,6 +93,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
 
     private File mPhotoFileCapture;
     private List<File> mFilesCreatedWhileCapturePhoto;
+    private RecursiveFileObserver mFileObserver;
 
     /**
      * Start {@link MediaPickerActivity} in {@link Activity} to pick photo or
@@ -164,12 +165,10 @@ public class MediaPickerActivity extends AppCompatActivity implements
             mMediaOptions = getIntent().getParcelableExtra(EXTRA_MEDIA_OPTIONS);
             if (mMediaOptions == null) {
                 throw new IllegalArgumentException(
-                        "NMediaOptions must be not null, you should use MediaPickerActivity.open(Activity activity, int requestCode,MediaOptions options) method instead.");
+                        "MediaOptions must be not null, you should use MediaPickerActivity.open(Activity activity, int requestCode,MediaOptions options) method instead.");
             }
         }
-        Fragment fragment = getSupportFragmentManager().findFragmentById(
-                R.id.container);
-        if (fragment == null) {
+        if (getActivePage() == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container,
@@ -177,11 +176,11 @@ public class MediaPickerActivity extends AppCompatActivity implements
                     .commit();
         }
         getSupportFragmentManager().addOnBackStackChangedListener(this);
-        getSupportActionBar().setBackgroundDrawable(
-                getResources().getDrawable(
-                        R.drawable.picker_actionbar_translucent));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.picker_actionbar_translucent));
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -271,6 +270,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
         outState.putParcelable(EXTRA_MEDIA_OPTIONS, mMediaOptions);
         outState.putSerializable(KEY_PHOTOFILE_CAPTURE, mPhotoFileCapture);
     }
+
     @Override
     public ImageLoader getImageLoader() {
         return new ImageLoaderImpl(getApplicationContext());
@@ -333,8 +333,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
         setResult(Activity.RESULT_OK, data);
         finish();
     }
-
-    private RecursiveFileObserver mFileObserver;
 
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

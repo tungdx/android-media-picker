@@ -59,7 +59,7 @@ public class MediaPickerFragment extends BaseFragment implements
     private MediaOptions mMediaOptions;
     private MediaSelectedListener mMediaSelectedListener;
     private Bundle mSavedInstanceState;
-    private List<MediaItem> mMediaselectedList;
+    private List<MediaItem> mMediaSelectedList;
 
     private int mMediaType;
     private int mPhotoSize, mPhotoSpacing;
@@ -89,7 +89,7 @@ public class MediaPickerFragment extends BaseFragment implements
             mMediaOptions = savedInstanceState
                     .getParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS);
             mMediaType = savedInstanceState.getInt(KEY_MEDIA_TYPE);
-            mMediaselectedList = savedInstanceState
+            mMediaSelectedList = savedInstanceState
                     .getParcelableArrayList(KEY_MEDIA_SELECTED_LIST);
             mSavedInstanceState = savedInstanceState;
         } else {
@@ -101,10 +101,10 @@ public class MediaPickerFragment extends BaseFragment implements
             } else {
                 mMediaType = MediaItem.VIDEO;
             }
-            mMediaselectedList = mMediaOptions.getMediaListSelected();
+            mMediaSelectedList = mMediaOptions.getMediaListSelected();
             // Override mediaType by 1st item media if has media selected.
-            if (mMediaselectedList != null && mMediaselectedList.size() > 0) {
-                mMediaType = mMediaselectedList.get(0).getType();
+            if (mMediaSelectedList != null && mMediaSelectedList.size() > 0) {
+                mMediaType = mMediaSelectedList.get(0).getType();
             }
         }
         // get the photo size and spacing
@@ -164,7 +164,7 @@ public class MediaPickerFragment extends BaseFragment implements
                 MediaPickerActivity.EXTRA_MEDIA_OPTIONS, mMediaOptions);
         mSavedInstanceState.putInt(KEY_MEDIA_TYPE, mMediaType);
         mSavedInstanceState.putParcelableArrayList(KEY_MEDIA_SELECTED_LIST,
-                (ArrayList<MediaItem>) mMediaselectedList);
+                (ArrayList<MediaItem>) mMediaSelectedList);
         outState.putAll(mSavedInstanceState);
     }
 
@@ -197,8 +197,8 @@ public class MediaPickerFragment extends BaseFragment implements
         if (state != null) {
             mGridView.onRestoreInstanceState(state);
         }
-        if (mMediaselectedList != null) {
-            mMediaAdapter.setMediaSelectedList(mMediaselectedList);
+        if (mMediaSelectedList != null) {
+            mMediaAdapter.setMediaSelectedList(mMediaSelectedList);
         }
         mMediaAdapter.notifyDataSetChanged();
     }
@@ -230,7 +230,7 @@ public class MediaPickerFragment extends BaseFragment implements
                     .findViewById(R.id.thumbnail);
             MediaItem mediaItem = new MediaItem(mMediaType, uri);
             mMediaAdapter.updateMediaSelected(mediaItem, pickerImageView);
-            mMediaselectedList = mMediaAdapter.getMediaSelectedList();
+            mMediaSelectedList = mMediaAdapter.getMediaSelectedList();
 
             if (mMediaAdapter.hasSelected()) {
                 mMediaSelectedListener.onHasSelected(mMediaAdapter
@@ -262,12 +262,11 @@ public class MediaPickerFragment extends BaseFragment implements
     }
 
     public List<MediaItem> getMediaSelectedList() {
-        return mMediaselectedList;
+        return mMediaSelectedList;
     }
 
     public boolean hasMediaSelected() {
-        return mMediaselectedList != null && mMediaselectedList.size() > 0 ? true
-                : false;
+        return mMediaSelectedList != null && mMediaSelectedList.size() > 0;
     }
 
     @Override
@@ -324,7 +323,7 @@ public class MediaPickerFragment extends BaseFragment implements
                             if (numColumns > 0) {
                                 final int columnWidth = (mGridView.getWidth() / numColumns)
                                         - mPhotoSpacing;
-                                Log.i("NMediaPickerFragment", String.format(
+                                Log.i("MediaPickerFragment", String.format(
                                         "Column Width=[%s]", columnWidth));
                                 mMediaAdapter.setNumColumns(numColumns);
                                 mMediaAdapter.setItemHeight(columnWidth);

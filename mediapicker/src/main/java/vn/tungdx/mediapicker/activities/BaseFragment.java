@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import vn.tungdx.mediapicker.imageloader.ImageLoader;
 
 /**
- * Created by TungDX on 6/4/2015.
+ * Created by TungDX
  */
 public class BaseFragment extends Fragment {
     protected Context mContext;
