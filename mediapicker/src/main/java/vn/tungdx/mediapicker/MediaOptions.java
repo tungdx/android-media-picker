@@ -208,7 +208,7 @@ public class MediaOptions implements Parcelable {
          * @param file
          *            Use for save image that cropped. Default image cropped
          *            saved in file that created by
-         *            {@link MediaUtils#createTempFile(android.content.Context)}
+         *            {@link Utils#createTempFile(android.content.Context)}
          *            <p/>
          *            <i>Note: file should not exist when pass to this method.
          *            Because if user cancels capture photo, this file will be
