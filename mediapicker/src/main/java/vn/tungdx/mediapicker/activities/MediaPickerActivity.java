@@ -31,8 +31,8 @@ import vn.tungdx.mediapicker.MediaItem;
 import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.MediaSelectedListener;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.imageloader.ImageLoader;
-import vn.tungdx.mediapicker.imageloader.ImageLoaderImpl;
+import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
+import vn.tungdx.mediapicker.imageloader.MediaImageLoaderImpl;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.MessageUtils;
 import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
@@ -267,8 +267,8 @@ public class MediaPickerActivity extends AppCompatActivity implements
     }
 
     @Override
-    public ImageLoader getImageLoader() {
-        return new ImageLoaderImpl(getApplicationContext());
+    public MediaImageLoader getImageLoader() {
+        return new MediaImageLoaderImpl(getApplicationContext());
     }
 
     @Override

@@ -1,10 +1,10 @@
 package vn.tungdx.mediapicker.activities;
 
-import vn.tungdx.mediapicker.imageloader.ImageLoader;
+import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
 
 /**
  * Created by TungDX
  */
 public interface FragmentHost {
-    ImageLoader getImageLoader();
+    MediaImageLoader getImageLoader();
 }

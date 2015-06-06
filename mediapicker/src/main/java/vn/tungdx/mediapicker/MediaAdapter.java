@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.imageloader.ImageLoader;
+import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.widget.PickerImageView;
 
@@ -26,7 +26,7 @@ import vn.tungdx.mediapicker.widget.PickerImageView;
  */
 public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     private int mMediaType;
-    private ImageLoader mImageLoader;
+    private MediaImageLoader mMediaImageLoader;
     private List<MediaItem> mMediaListSelected = new ArrayList<MediaItem>();
     private MediaOptions mMediaOptions;
     private int mItemHeight = 0;
@@ -35,17 +35,17 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     private List<PickerImageView> mPickerImageViewSelected = new ArrayList<PickerImageView>();
 
     public MediaAdapter(Context context, Cursor c, int flags,
-                        ImageLoader imageLoader, int mediaType, MediaOptions mediaOptions) {
-        this(context, c, flags, null, imageLoader, mediaType, mediaOptions);
+                        MediaImageLoader mediaImageLoader, int mediaType, MediaOptions mediaOptions) {
+        this(context, c, flags, null, mediaImageLoader, mediaType, mediaOptions);
     }
 
     public MediaAdapter(Context context, Cursor c, int flags,
-                        List<MediaItem> mediaListSelected, ImageLoader imageLoader,
+                        List<MediaItem> mediaListSelected, MediaImageLoader mediaImageLoader,
                         int mediaType, MediaOptions mediaOptions) {
         super(context, c, flags);
         if (mediaListSelected != null)
             mMediaListSelected = mediaListSelected;
-        mImageLoader = imageLoader;
+        mMediaImageLoader = mediaImageLoader;
         mMediaType = mediaType;
         mMediaOptions = mediaOptions;
         mImageViewLayoutParams = new RelativeLayout.LayoutParams(
@@ -68,7 +68,7 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
         if (isSelected) {
             mPickerImageViewSelected.add(holder.imageView);
         }
-        mImageLoader.displayImage(uri, holder.imageView);
+        mMediaImageLoader.displayImage(uri, holder.imageView);
     }
 
     @Override

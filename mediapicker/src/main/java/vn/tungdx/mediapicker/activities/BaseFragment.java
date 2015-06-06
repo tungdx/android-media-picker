@@ -5,20 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import vn.tungdx.mediapicker.imageloader.ImageLoader;
+import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
 
 /**
  * Created by TungDX
  */
 public class BaseFragment extends Fragment {
     protected Context mContext;
-    protected ImageLoader mImageLoader;
+    protected MediaImageLoader mMediaImageLoader;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         FragmentHost host = (FragmentHost) activity;
-        mImageLoader = host.getImageLoader();
+        mMediaImageLoader = host.getImageLoader();
     }
 
     @Override

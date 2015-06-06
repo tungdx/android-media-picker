@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
@@ -17,15 +18,9 @@ import vn.tungdx.mediapicker.R;
  * @author TUNGDX
  */
 
-public class ImageLoaderImpl implements ImageLoader {
+public class MediaImageLoaderImpl implements MediaImageLoader {
 
-    public ImageLoaderImpl(Context context) {
-        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true).cacheOnDisk(true)
-                .showImageOnLoading(R.color.picker_imageloading)
-                .cacheOnDisk(false)
-                .considerExifParams(true).resetViewBeforeLoading(true).build();
-
+    public MediaImageLoaderImpl(Context context) {
         ImageLoaderConfiguration imageLoaderConfig = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -33,15 +28,20 @@ public class ImageLoaderImpl implements ImageLoader {
                 .memoryCacheSizePercentage(30)
                 .tasksProcessingOrder(QueueProcessingType.FIFO)
                 .writeDebugLogs().threadPoolSize(3)
-                .defaultDisplayImageOptions(displayImageOptions).build();
+                .build();
 
-        com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(imageLoaderConfig);
+        ImageLoader.getInstance().init(imageLoaderConfig);
     }
 
     @Override
     public void displayImage(Uri uri, ImageView imageView) {
-        ImageAware imageAware = new ImageViewAware(imageView,
-                false);
-        com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(uri.toString(), imageAware);
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .showImageOnLoading(R.color.picker_imageloading)
+                .cacheOnDisk(false)
+                .considerExifParams(true).resetViewBeforeLoading(true).build();
+
+        ImageAware imageAware = new ImageViewAware(imageView, false);
+        ImageLoader.getInstance().displayImage(uri.toString(), imageAware, displayImageOptions);
     }
 }

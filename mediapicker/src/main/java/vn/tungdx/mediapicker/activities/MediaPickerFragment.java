@@ -12,7 +12,6 @@ import android.provider.MediaStore.Video;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,7 +183,7 @@ public class MediaPickerFragment extends BaseFragment implements
         switchToData();
         if (mMediaAdapter == null) {
             mMediaAdapter = new MediaAdapter(mContext, cursor, 0,
-                    mImageLoader, mMediaType, mMediaOptions);
+                    mMediaImageLoader, mMediaType, mMediaOptions);
         } else {
             mMediaAdapter.setMediaType(mMediaType);
             mMediaAdapter.swapCursor(cursor);
@@ -323,8 +322,6 @@ public class MediaPickerFragment extends BaseFragment implements
                             if (numColumns > 0) {
                                 final int columnWidth = (mGridView.getWidth() / numColumns)
                                         - mPhotoSpacing;
-                                Log.i("MediaPickerFragment", String.format(
-                                        "Column Width=[%s]", columnWidth));
                                 mMediaAdapter.setNumColumns(numColumns);
                                 mMediaAdapter.setItemHeight(columnWidth);
                             }
