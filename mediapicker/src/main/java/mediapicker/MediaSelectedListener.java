@@ -1,4 +1,4 @@
-package vn.tungdx.mediapicker;
+package mediapicker;
 
 import java.util.List;
 
@@ -8,10 +8,9 @@ import java.util.List;
 
 /**
  * Listener for select media item.
- *
  */
 public interface MediaSelectedListener {
-    public void onHasNoSelected();
+  public void onHasNoSelected();
 
-    public void onHasSelected(List<MediaItem> mediaSelectedList);
+  public void onHasSelected(List<MediaItem> mediaSelectedList);
 }

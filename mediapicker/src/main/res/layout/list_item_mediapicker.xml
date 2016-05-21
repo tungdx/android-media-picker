@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <vn.tungdx.mediapicker.widget.PickerImageView
+    <mediapicker.widget.PickerImageView
         android:id="@id/thumbnail"
         android:layout_width="@dimen/picker_photo_size"
         android:layout_height="@dimen/picker_photo_size"

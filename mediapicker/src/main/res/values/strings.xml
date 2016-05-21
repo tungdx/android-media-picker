@@ -1,8 +1,8 @@
 <resources>
 
     <string name="waiting">Waiting&#8230;</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="ok">OK</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+    <string name="ok">确定</string>
 
 </resources>

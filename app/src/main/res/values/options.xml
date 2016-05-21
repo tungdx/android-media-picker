@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="options">
-        <item>Default options</item>
-        <item>Select Photo and Crop (Default cropped file)</item>
-        <item>Select Photo and Crop (Options cropped file)</item>
-        <item>Select Photo and Crop (Aspect X=3 vs Aspect Y=1)</item>
-        <item>Select Photo and Crop (Not fix AspectRatio)</item>
-        <item>Select videos</item>
-        <item>Select videos and set max duration</item>
-        <item>Select videos and set min duration</item>
-        <item>Select videos and set max duration AND show warning before record</item>
-        <item>Select photos or videos</item>
-        <item>Display photos or videos that were pre selected</item>
-        <item>Using MediaPicker in Fragment</item>
-    </string-array>
+	<string-array name="options">
+		<item>Default options</item>
+		<item>Select Photo and Crop (Default cropped file)</item>
+		<item>Select Photo and Crop (Options cropped file)</item>
+		<item>Select Photo and Crop (Aspect X=3 vs Aspect Y=1)</item>
+		<item>Select Photo and Crop (Not fix AspectRatio)</item>
+		<item>Select videos</item>
+		<item>Select videos and set max duration</item>
+		<item>Select videos and set min duration</item>
+		<item>Select videos and set max duration AND show warning before record</item>
+		<item>Select photos or videos</item>
+		<item>Display photos or videos that were pre selected</item>
+		<item>Using MediaPicker in Fragment</item>
+		<item>单图选择</item>
+		<item>单图选择不剪切</item>
+		<item>多图选择</item>
+		<item></item>
+	</string-array>
 </resources>

@@ -5,7 +5,7 @@
     <string name="picker_record_video">Record video</string>
     <string name="picker_switch_media">Switch media</string>
     <string name="picker_no_items">No items.</string>
-    <string name="picker_done_capital">DONE</string>
+    <string name="picker_done_capital">完成</string>
 
     <plurals name="picker_video_duration_min">
         <item quantity="one">This video\'s duration smaller than %d second.</item>

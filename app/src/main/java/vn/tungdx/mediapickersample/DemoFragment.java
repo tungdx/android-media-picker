@@ -12,14 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
-
-import vn.tungdx.mediapicker.MediaItem;
-import vn.tungdx.mediapicker.activities.MediaPickerActivity;
-
+import mediapicker.MediaItem;
+import mediapicker.activities.MediaPickerActivity;
 
 public class DemoFragment extends Fragment {
     private static final int REQUEST_MEDIA = 100;

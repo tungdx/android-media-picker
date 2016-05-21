@@ -19,10 +19,11 @@
         <activity
             android:name=".DemoFragmentActivity"
             android:label="@string/demo_media_picker" />
+        <!-- Add MediaPicker library -->
         <activity
-            android:name="vn.tungdx.mediapicker.activities.MediaPickerActivity"
+            android:name="mediapicker.activities.MediaPickerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MediaPickerTheme" />
+            android:theme="@style/MediaPickerTheme"/>
     </application>
 
 </manifest>
