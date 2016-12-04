@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.List;
@@ -67,9 +67,9 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
         String info = String.format("Original Uri [%s]\nOriginal Path [%s] \n\nCropped Uri [%s] \nCropped Path[%s]", mediaItem.getUriOrigin(), mediaItem.getUriCropped(), mediaItem.getPathOrigin(this), mediaItem.getPathCropped(this));
         textView.setText(info);
         if (mediaItem.getUriCropped() == null) {
-            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(), imageView);
+            Glide.with(this).load(mediaItem.getUriOrigin()).into(imageView);
         } else {
-            ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
+            Glide.with(this).load(mediaItem.getUriCropped()).into(imageView);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.topMargin = 5;

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -71,9 +71,9 @@ public class DemoFragment extends Fragment {
         String info = String.format("Original Uri [%s]\nOriginal Path [%s] \n\nCropped Uri [%s] \nCropped Path[%s]", mediaItem.getUriOrigin(), mediaItem.getUriCropped(), mediaItem.getPathOrigin(getActivity()), mediaItem.getPathCropped(getActivity()));
         textView.setText(info);
         if (mediaItem.getUriCropped() == null) {
-            ImageLoader.getInstance().displayImage(mediaItem.getUriOrigin().toString(), imageView);
+            Glide.with(getContext()).load(mediaItem.getUriOrigin()).into(imageView);
         } else {
-            ImageLoader.getInstance().displayImage(mediaItem.getUriCropped().toString(), imageView);
+            Glide.with(getContext()).load(mediaItem.getUriCropped()).into(imageView);
         }
         mLinearLayout.addView(root);
     }
