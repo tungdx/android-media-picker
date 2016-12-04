@@ -1,10 +1,12 @@
 package vn.tungdx.mediapicker.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,9 +14,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -84,6 +88,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
     private static final int REQUEST_VIDEO_CAPTURE = 200;
 
     private static final String KEY_PHOTOFILE_CAPTURE = "key_photofile_capture";
+    private static final int REQUEST_CAMERA_PERMISSION = 300;
 
     private MediaOptions mMediaOptions;
     private MenuItem mMediaSwitcher;
@@ -95,6 +100,8 @@ public class MediaPickerActivity extends AppCompatActivity implements
     private List<File> mFilesCreatedWhileCapturePhoto;
     private RecursiveFileObserver mFileObserver;
     private FileObserverTask mFileObserverTask;
+    private boolean takePhotoPending;
+    private boolean takeVideoPending;
 
     /**
      * Start {@link MediaPickerActivity} in {@link Activity} to pick photo or
@@ -212,10 +219,12 @@ public class MediaPickerActivity extends AppCompatActivity implements
             finish();
 
         } else if (i == R.id.take_photo) {
-            takePhoto();
+            performTakePhotoRequest();
+            takePhotoPending = true;
             return true;
         } else if (i == R.id.take_video) {
-            takeVideo();
+            performTakeVideoRequest();
+            takeVideoPending = true;
             return true;
         } else if (i == R.id.media_switcher) {
             Fragment activePage = getActivePage();
@@ -639,6 +648,56 @@ public class MediaPickerActivity extends AppCompatActivity implements
         if (mFileObserver != null) {
             mFileObserver.stopWatching();
             mFileObserver = null;
+        }
+    }
+
+    private void performTakePhotoRequest() {
+        if (hasCameraPermission()) {
+            takePhoto();
+        } else {
+            requestCameraPermission();
+        }
+    }
+
+    private void performTakeVideoRequest() {
+        if (hasCameraPermission()) {
+            takeVideo();
+        } else {
+            requestCameraPermission();
+        }
+    }
+
+    private boolean hasCameraPermission() {
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        return permission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                REQUEST_CAMERA_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA_PERMISSION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (takePhotoPending) {
+                        takePhoto();
+                    } else if (takeVideoPending) {
+                        takeVideo();
+                    }
+
+                }
+                return;
+        }
+        //pass permission result to fragments in this activity
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
         }
     }
 }
