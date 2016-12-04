@@ -1,4 +1,4 @@
-# android-media-picker
+# Android Media Picker
 A library for choose photos, videos from Android devices.
 
 Here are some of the features of the Android Media Picker Library:
@@ -7,6 +7,7 @@ Here are some of the features of the Android Media Picker Library:
 * 2) Options to crop photo.
 * 3) Options for pick video.
 * 4) Use with Activity or Fragment.
+* 5) Support requesting permissions on Android M
 
 **DEMO** https://youtu.be/R61a5quA0iQ
 <br/><a href="http://www.youtube.com/watch?feature=player_embedded&v=R61a5quA0iQ
