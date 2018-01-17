@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -352,7 +353,7 @@ public class MediaPickerActivity extends AppCompatActivity implements
             if (file != null) {
                 mPhotoFileCapture = file;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(file));
+                        FileProvider.getUriForFile(this, "vn.tungdx.mediapicker" , file));
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
                 mFileObserverTask = new FileObserverTask();
                 mFileObserverTask.execute();
