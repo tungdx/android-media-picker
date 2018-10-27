@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.edmodo.cropper.CropImageView
+    <com.theartofdev.edmodo.cropper.CropImageView
         android:id="@id/crop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="80dp"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"/>
 
         <ImageView
             android:id="@id/rotate_left"
@@ -31,7 +32,7 @@
             android:layout_margin="5dp"
             android:contentDescription="@null"
             android:padding="5dp"
-            android:src="@drawable/ic_rotate_left" />
+            android:src="@drawable/ic_rotate_left"/>
 
         <ImageView
             android:id="@id/rotate_right"
@@ -40,14 +41,14 @@
             android:layout_margin="5dp"
             android:contentDescription="@null"
             android:padding="5dp"
-            android:src="@drawable/ic_rotate_right" />
+            android:src="@drawable/ic_rotate_right"/>
 
         <Button
             android:id="@id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="80dp"
-            android:text="@string/save" />
-    </LinearLayout>
+            android:text="@string/save"/>
 
+    </LinearLayout>
 </LinearLayout>
