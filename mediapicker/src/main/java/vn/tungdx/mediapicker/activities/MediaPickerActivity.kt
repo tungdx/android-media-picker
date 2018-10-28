@@ -82,11 +82,14 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
     override val imageLoader: MediaImageLoader
         get() = MediaImageLoaderImpl(applicationContext)
 
-    private val mOnFileCreatedListener = RecursiveFileObserver.OnFileCreatedListener { file ->
-        if (mFilesCreatedWhileCapturePhoto == null) {
-            mFilesCreatedWhileCapturePhoto = ArrayList()
+    private val mOnFileCreatedListener = object : RecursiveFileObserver.OnFileCreatedListener {
+
+        override fun onFileCreate(file: File) {
+            if (mFilesCreatedWhileCapturePhoto == null) {
+                mFilesCreatedWhileCapturePhoto = ArrayList()
+            }
+            mFilesCreatedWhileCapturePhoto!!.add(file)
         }
-        mFilesCreatedWhileCapturePhoto!!.add(file)
     }
 
     private val activePage: Fragment?
@@ -325,7 +328,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
                 REQUEST_PHOTO_CAPTURE -> {
                     tryCorrectPhotoFileCaptured()
                     if (mPhotoFileCapture != null) {
-                        MediaUtils.galleryAddPic(applicationContext, mPhotoFileCapture)
+                        MediaUtils.galleryAddPic(applicationContext, mPhotoFileCapture!!)
                         if (mMediaOptions!!.isCropped) {
                             val item = MediaItem(MediaItem.PHOTO, Uri.fromFile(mPhotoFileCapture))
                             showCropFragment(item, mMediaOptions!!)
@@ -416,7 +419,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
         // MediaPlayer before use Uri because some devices can get duration by
         // Uri or not exactly. Ex: Asus Memo Pad8)
         var duration = MediaUtils.getDuration(applicationContext,
-                MediaUtils.getRealVideoPathFromURI(contentResolver, videoUri))
+                MediaUtils.getRealVideoPathFromURI(contentResolver, videoUri)!!)
         if (duration == 0L) {
             // try get duration one more, by uri of video. Note: Some time can
             // not get duration by Uri after record video.(It's usually happen

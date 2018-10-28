@@ -8,33 +8,24 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.provider.MediaStore.Images
-import android.provider.MediaStore.MediaColumns
-import android.provider.MediaStore.Video
-import androidx.loader.app.LoaderManager
-import androidx.core.content.ContextCompat
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
+import android.provider.MediaStore.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.AbsListView.LayoutParams
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
-
-import java.util.ArrayList
-
-import vn.tungdx.mediapicker.MediaAdapter
-import vn.tungdx.mediapicker.MediaItem
-import vn.tungdx.mediapicker.MediaOptions
-import vn.tungdx.mediapicker.MediaSelectedListener
-import vn.tungdx.mediapicker.R
+import androidx.core.content.ContextCompat
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import vn.tungdx.mediapicker.*
 import vn.tungdx.mediapicker.utils.MediaUtils
 import vn.tungdx.mediapicker.utils.Utils
 import vn.tungdx.mediapicker.widget.HeaderGridView
 import vn.tungdx.mediapicker.widget.PickerImageView
+import java.util.*
 
 
 /**
@@ -157,8 +148,8 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         }
         switchToData()
         if (mMediaAdapter == null) {
-            mMediaAdapter = MediaAdapter(mContext, cursor, 0,
-                    mMediaImageLoader, mediaType, mMediaOptions)
+            mMediaAdapter = MediaAdapter(mContext!!, cursor, 0,
+                    mMediaImageLoader, mediaType, mMediaOptions!!)
         } else {
             mMediaAdapter!!.setMediaType(mediaType)
             mMediaAdapter!!.swapCursor(cursor)
@@ -172,7 +163,7 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
             mGridView!!.onRestoreInstanceState(state)
         }
         if (mediaSelectedList != null) {
-            mMediaAdapter!!.mediaSelectedList = mediaSelectedList
+            mMediaAdapter!!.mediaSelectedList = mediaSelectedList!!.toMutableList()
         }
         mMediaAdapter!!.notifyDataSetChanged()
     }
@@ -215,10 +206,10 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     fun switchMediaSelector() {
         if (!mMediaOptions!!.canSelectPhotoAndVideo())
             return
-        if (mediaType == MediaItem.PHOTO) {
-            mediaType = MediaItem.VIDEO
+        mediaType = if (mediaType == MediaItem.PHOTO) {
+            MediaItem.VIDEO
         } else {
-            mediaType = MediaItem.PHOTO
+            MediaItem.PHOTO
         }
         when (mediaType) {
             MediaItem.PHOTO -> requestPhotos(true)
@@ -261,7 +252,7 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         val header = View(activity)
         val params = LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                Utils.getActionbarHeight(activity))
+                Utils.getActionbarHeight(activity!!))
         header.layoutParams = params
         mGridView!!.addHeaderView(header)
 

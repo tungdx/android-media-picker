@@ -101,7 +101,7 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
         val scheme = mMediaItemSelected!!.uriOrigin?.scheme
         if (scheme == ContentResolver.SCHEME_CONTENT) {
             filePath = MediaUtils.getRealImagePathFromURI(activity!!
-                    .contentResolver, mMediaItemSelected!!.uriOrigin)
+                    .contentResolver, mMediaItemSelected!!.uriOrigin!!)
         } else if (scheme == ContentResolver.SCHEME_FILE) {
             filePath = mMediaItemSelected!!.uriOrigin?.path
         }
@@ -111,10 +111,10 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
             return
         }
         val width = resources.displayMetrics.widthPixels / 3 * 2
-        val bitmap = MediaUtils.decodeSampledBitmapFromFile(filePath, width,
+        val bitmap = MediaUtils.decodeSampledBitmapFromFile(filePath!!, width,
                 width)
         try {
-            val exif = ExifInterface(filePath!!)
+            val exif = ExifInterface(filePath)
             mCropImageView!!.setImageBitmap(bitmap, exif)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -158,7 +158,7 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
             if (mMediaOptions!!.croppedFile != null) {
                 file = mMediaOptions!!.croppedFile!!
             } else {
-                file = Utils.createTempFile(mContext)
+                file = Utils.createTempFile(mContext!!)
             }
             val success = bitmap.compress(CompressFormat.JPEG, 100,
                     FileOutputStream(file))
@@ -173,11 +173,8 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
     }
 
     private inner class SaveFileCroppedTask(activity: Activity) : AsyncTask<Void, Void, Uri>() {
-        private val reference: WeakReference<Activity>
 
-        init {
-            reference = WeakReference(activity)
-        }
+        private val reference: WeakReference<Activity> = WeakReference(activity)
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -192,12 +189,9 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
             // must try-catch, maybe getCroppedImage() method crash because not
             // set bitmap in mCropImageView
             try {
-                var bitmap: Bitmap? = mCropImageView!!.croppedImage
+                val bitmap: Bitmap? = mCropImageView!!.croppedImage
                 uri = saveBitmapCropped(bitmap)
-                if (bitmap != null) {
-                    bitmap.recycle()
-                    bitmap = null
-                }
+                bitmap?.recycle()
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
@@ -212,7 +206,7 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
                 mDialog = null
             }
             mMediaItemSelected!!.uriCropped = result
-            mCropListener!!.onSuccess(mMediaItemSelected)
+            mCropListener!!.onSuccess(mMediaItemSelected!!)
         }
     }
 
@@ -235,11 +229,12 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
     }
 
     companion object {
-        private val EXTRA_MEDIA_SELECTED = "extra_media_selected"
-        private val EXTRA_MEDIA_OPTIONS = "extra_media_options"
 
-        fun newInstance(item: MediaItem,
-                        options: MediaOptions): PhotoCropFragment {
+        private const val EXTRA_MEDIA_SELECTED = "extra_media_selected"
+
+        private const val EXTRA_MEDIA_OPTIONS = "extra_media_options"
+
+        fun newInstance(item: MediaItem, options: MediaOptions): PhotoCropFragment {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_MEDIA_SELECTED, item)
             bundle.putParcelable(EXTRA_MEDIA_OPTIONS, options)
