@@ -16,3 +16,20 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 More details:
 http://robusttechhouse.com/android-media-picker-library-to-pick-photos-and-videos/
+
+Download
+--------
+
+Download [the latest JAR][2] or grab via Maven:
+```xml
+<dependency>
+  <groupId>per.freesky1102.mediapicker</groupId>
+  <artifactId>mediapicker</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+or Gradle:
+```groovy
+implementation 'per.freesky1102.mediapicker:mediapicker:1.0.0'
+```
