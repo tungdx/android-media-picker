@@ -39,3 +39,27 @@ def build_versions = [
         build_tools: "28.0.3"
 ]
 ext.build_versions = build_versions
+
+ext {
+    bintrayRepo = 'Android_Media_Picker'
+    bintrayName = 'per.freesky1102.mediapicker'
+
+    publishedGroupId = 'per.freesky1102.mediapicker'
+    libraryName = 'mediapicker'
+    artifact = 'mediapicker'
+
+    libraryDescription = 'Easy Android Media Picker'
+
+    siteUrl = 'https://github.com/tungdx/android-media-picker'
+    gitUrl = 'https://github.com/tungdx/android-media-picker'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'toantk238'
+    developerName = 'Toan Tran'
+    developerEmail = 'toantk238@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
