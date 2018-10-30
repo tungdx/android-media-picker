@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +45,7 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_MEDIA) {
             if (resultCode == RESULT_OK) {
-                mMediaSelectedList = MediaPickerActivity
+                mMediaSelectedList = MediaPickerActivity.Companion
                         .getMediaItemSelected(data);
                 if (mMediaSelectedList != null) {
                     for (MediaItem mediaItem : mMediaSelectedList) {
@@ -81,7 +81,7 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
         MediaOptions options = null;
         switch (option) {
             case 0:
-                options = MediaOptions.createDefault();
+                options = MediaOptions.Companion.createDefault();
                 break;
             case 1:
                 options = builder.setIsCropped(true).setFixAspectRatio(true)
@@ -135,7 +135,7 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
         }
         if (options != null) {
             clearImages();
-            MediaPickerActivity.open(this, REQUEST_MEDIA, options);
+            MediaPickerActivity.Companion.open(this, REQUEST_MEDIA, options);
         }
     }
 

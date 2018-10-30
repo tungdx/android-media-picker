@@ -1,8 +1,8 @@
 package vn.tungdx.mediapickersample;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by TUNGDX on 6/6/2015.

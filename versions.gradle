@@ -1,0 +1,65 @@
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+ext.deps = [:]
+def deps = [:]
+
+def versions = [
+        androidx: "1.0.0",
+        kotlin  : "1.2.70",
+        glide   : "4.8.0"
+]
+
+def support = [
+        v4       : "androidx.legacy:legacy-support-v4:${versions.androidx}",
+        appcompat: "androidx.appcompat:appcompat:${versions.androidx}"
+]
+deps.support = support
+
+def kotlin = [
+        stdlib: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+        test  : "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
+        plugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+]
+deps.kotlin = kotlin
+
+def glide = [
+        glide   : "com.github.bumptech.glide:glide:${versions.glide}",
+        compiler: "com.github.bumptech.glide:compiler:${versions.glide}"
+]
+deps.glide = glide
+
+ext.deps = deps
+
+def build_versions = [
+        min_sdk    : 15,
+        target_sdk : 28,
+        compile_sdk: 28,
+        build_tools: "28.0.3"
+]
+ext.build_versions = build_versions
+
+ext {
+    bintrayRepo = 'Android_Media_Picker'
+    bintrayName = 'per.freesky1102.mediapicker'
+
+    publishedGroupId = 'per.freesky1102.mediapicker'
+    libraryName = 'mediapicker'
+    artifact = 'mediapicker'
+
+    libraryDescription = 'Easy Android Media Picker'
+
+    siteUrl = 'https://github.com/tungdx/android-media-picker'
+    gitUrl = 'https://github.com/tungdx/android-media-picker'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'toantk238'
+    developerName = 'Toan Tran'
+    developerEmail = 'toantk238@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
