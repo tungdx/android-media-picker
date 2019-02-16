@@ -1,4 +1,7 @@
 # Android Media Picker
+
+[ ![Download](https://api.bintray.com/packages/toantk238/Android_Media_Picker/per.freesky1102.mediapicker/images/download.svg) ](https://bintray.com/toantk238/Android_Media_Picker/per.freesky1102.mediapicker/_latestVersion)
+
 A library for choose photos, videos from Android devices.
 
 Here are some of the features of the Android Media Picker Library:
