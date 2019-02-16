@@ -76,8 +76,7 @@ class MediaAdapter(context: Context, c: Cursor, flags: Int,
 
     override fun newView(context: Context, cursor: Cursor, viewGroup: ViewGroup): View {
         val holder = ViewHolder()
-        val root = View
-                .inflate(mContext, R.layout.list_item_mediapicker, null)
+        val root = View.inflate(context, R.layout.list_item_mediapicker, null)
         holder.imageView = root.findViewById<View>(R.id.thumbnail) as PickerImageView
         holder.thumbnail = root.findViewById(R.id.overlay)
 
@@ -203,8 +202,7 @@ class MediaAdapter(context: Context, c: Cursor, flags: Int,
     }
 
     override fun onMovedToScrapHeap(view: View) {
-        val imageView = view
-                .findViewById<View>(R.id.thumbnail) as PickerImageView
+        val imageView = view.findViewById<View>(R.id.thumbnail) as PickerImageView?
         mPickerImageViewSelected.remove(imageView)
     }
 

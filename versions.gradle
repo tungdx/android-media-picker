@@ -53,7 +53,7 @@ ext {
     siteUrl = 'https://github.com/tungdx/android-media-picker'
     gitUrl = 'https://github.com/tungdx/android-media-picker'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'toantk238'
     developerName = 'Toan Tran'
