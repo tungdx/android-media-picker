@@ -6,7 +6,6 @@ import android.os.Parcelable
 import vn.tungdx.mediapicker.MediaOptions.Builder
 import vn.tungdx.mediapicker.utils.MediaUtils
 import java.io.File
-import java.util.*
 
 /**
  * @author TUNGDX
@@ -42,31 +41,42 @@ class MediaOptions : Parcelable {
     private var canSelectMultiVideo: Boolean = false
     var isCropped: Boolean = false
         private set
+
     /**
      *
      * @return in milliseconds.
      */
     var maxVideoDuration: Int = 0
         private set
+
     /**
      *
      * @return in milliseconds.
      */
     var minVideoDuration: Int = 0
         private set
+
     private var canSelectPhoto: Boolean = false
+
     private var canSelectVideo: Boolean = false
+
     var photoFile: File? = null
         private set
+
     var aspectX: Int = 0
         private set
+
     var aspectY: Int = 0
         private set
+
     var isFixAspectRatio: Boolean = false
         private set
+
     var croppedFile: File? = null
         private set
-    var mediaListSelected: List<MediaItem>? = ArrayList()
+
+    var mediaListSelected: List<MediaItem>? = null
+
     var isShowWarningVideoDuration: Boolean = false
         private set
 
@@ -149,7 +159,7 @@ class MediaOptions : Parcelable {
          * @param mediaSelecteds
          * Media list selected before.
          */
-        fun setMediaListSelected(mediaSelecteds: List<MediaItem>): Builder {
+        fun setMediaListSelected(mediaSelecteds: List<MediaItem>?): Builder {
             this.mediaListSelected = mediaSelecteds
             return this
         }
@@ -368,21 +378,21 @@ class MediaOptions : Parcelable {
         dest.writeTypedList(mediaListSelected)
     }
 
-    constructor(`in`: Parcel) {
-        canSelectMultiPhoto = `in`.readInt() != 0
-        canSelectMultiVideo = `in`.readInt() != 0
-        canSelectPhoto = `in`.readInt() != 0
-        canSelectVideo = `in`.readInt() != 0
-        isCropped = `in`.readInt() != 0
-        isFixAspectRatio = `in`.readInt() != 0
-        isShowWarningVideoDuration = `in`.readInt() != 0
-        this.maxVideoDuration = `in`.readInt()
-        this.minVideoDuration = `in`.readInt()
-        aspectX = `in`.readInt()
-        aspectY = `in`.readInt()
-        this.photoFile = `in`.readSerializable() as File?
-        this.croppedFile = `in`.readSerializable() as File?
-        `in`.readTypedList(this.mediaListSelected, MediaItem.CREATOR)
+    constructor(parcel: Parcel) {
+        canSelectMultiPhoto = parcel.readInt() != 0
+        canSelectMultiVideo = parcel.readInt() != 0
+        canSelectPhoto = parcel.readInt() != 0
+        canSelectVideo = parcel.readInt() != 0
+        isCropped = parcel.readInt() != 0
+        isFixAspectRatio = parcel.readInt() != 0
+        isShowWarningVideoDuration = parcel.readInt() != 0
+        this.maxVideoDuration = parcel.readInt()
+        this.minVideoDuration = parcel.readInt()
+        aspectX = parcel.readInt()
+        aspectY = parcel.readInt()
+        this.photoFile = parcel.readSerializable() as File?
+        this.croppedFile = parcel.readSerializable() as File?
+        parcel.readTypedList(this.mediaListSelected ?: listOf(), MediaItem.CREATOR)
     }
 
     override fun hashCode(): Int {

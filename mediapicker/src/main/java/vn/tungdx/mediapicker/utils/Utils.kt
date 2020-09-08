@@ -3,14 +3,13 @@ package vn.tungdx.mediapicker.utils
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.res.TypedArray
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
-
+import androidx.core.content.FileProvider
+import vn.tungdx.mediapicker.R
 import java.io.File
 import java.io.IOException
-
-import vn.tungdx.mediapicker.R
 
 /**
  * Created by TungDX on 6/4/2015.
@@ -71,5 +70,10 @@ object Utils {
     fun createTempFile(context: Context, folder: File?): File {
         val prefix = System.currentTimeMillis().toString()
         return File.createTempFile(prefix, null, folder)
+    }
+
+    @JvmStatic
+    fun getUriForFile(context: Context, file: File): Uri {
+        return FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
     }
 }

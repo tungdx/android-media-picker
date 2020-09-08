@@ -28,6 +28,7 @@ import vn.tungdx.mediapicker.imageloader.MediaImageLoaderImpl
 import vn.tungdx.mediapicker.utils.MediaUtils
 import vn.tungdx.mediapicker.utils.MessageUtils
 import vn.tungdx.mediapicker.utils.RecursiveFileObserver
+import vn.tungdx.mediapicker.utils.Utils
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -248,7 +249,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             var file: File? = mMediaOptions!!.photoFile
             if (file == null) {
                 try {
-                    file = MediaUtils.createDefaultImageFile()
+                    file = MediaUtils.createDefaultImageFile(this)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -256,8 +257,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             }
             if (file != null) {
                 mPhotoFileCapture = file
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(file))
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.getUriForFile(this, file))
                 startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE)
                 mFileObserverTask = FileObserverTask()
                 mFileObserverTask!!.execute()
@@ -425,8 +425,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             // not get duration by Uri after record video.(It's usually happen
             // in HTC
             // devices 2.3, maybe others)
-            duration = MediaUtils
-                    .getDuration(applicationContext, videoUri)
+            duration = MediaUtils.getDuration(applicationContext, videoUri)
         }
         // accept delta about < 1000 milliseconds. (ex: 10769 is still accepted
         // if limit is 10000)
@@ -540,7 +539,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
                                             grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CAMERA_PERMISSION -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (takePhotoPending) {
                         takePhoto()
                     } else if (takeVideoPending) {
@@ -553,10 +552,8 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
         }
         //pass permission result to fragments in this activity
         val fragments = supportFragmentManager.fragments
-        if (fragments != null) {
-            for (fragment in fragments) {
-                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            }
+        for (fragment in fragments) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
@@ -564,6 +561,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
         private const val TAG = "MediaPickerActivity"
 
         const val EXTRA_MEDIA_OPTIONS = "extra_media_options"
+
         /**
          * Intent extra included when return back data in
          * [Activity.onActivityResult] of activity or fragment
