@@ -132,13 +132,12 @@ class MediaItem : Parcelable {
             return uri.path
         } else if (scheme == ContentResolver.SCHEME_CONTENT) {
             return if (isPhoto) {
-                MediaUtils.getRealImagePathFromURI(
-                        context.contentResolver, uri)
+                MediaUtils.getRealImagePathFromURI(context.contentResolver, uri)
             } else {
-                MediaUtils.getRealVideoPathFromURI(
-                        context.contentResolver, uri)
+                MediaUtils.getRealVideoPathFromURI(context.contentResolver, uri)
             }
         }
+
         return uri.toString()
     }
 

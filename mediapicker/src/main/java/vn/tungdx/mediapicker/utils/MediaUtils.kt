@@ -51,12 +51,11 @@ object MediaUtils {
      * @throws IOException
      */
     @Throws(IOException::class)
-    fun createDefaultImageFile(): File {
+    fun createDefaultImageFile(context: Context): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_$timeStamp.jpg"
-        val storageDir = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         if (!storageDir.exists()) {
             storageDir.mkdirs()
         }
@@ -176,17 +175,18 @@ object MediaUtils {
     fun getRealVideoPathFromURI(contentResolver: ContentResolver,
                                 contentURI: Uri): String? {
         val cursor = contentResolver.query(contentURI, null, null, null, null)
-        if (cursor == null)
-            return contentURI.path
-        else {
-            cursor.moveToFirst()
-            val idx = cursor.getColumnIndex(Video.VideoColumns.DATA)
-            try {
-                return cursor.getString(idx)
-            } catch (exception: Exception) {
-                return null
-            }
+                ?: return contentURI.path
 
+        cursor.moveToFirst()
+
+        val idx = cursor.getColumnIndex(Video.VideoColumns.DATA)
+
+        return try {
+            val path = cursor.getString(idx)
+            cursor.close()
+            path
+        } catch (exception: Exception) {
+            null
         }
     }
 
