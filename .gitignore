@@ -5,3 +5,10 @@
 /captures
 *.iml
 .idea
+/.idea
+*.apk
+*patch
+.yardoc
+.envrc
+.kotlin/
+Gemfile.lock

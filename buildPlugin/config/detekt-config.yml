@@ -1,0 +1,185 @@
+build:
+  weights:
+    complexity: 2
+    formatting: 1
+    LongParameterList: 1
+    comments: 1
+
+processors:
+  active: true
+  exclude:
+  # - 'FunctionCountProcessor'
+  # - 'PropertyCountProcessor'
+  # - 'ClassCountProcessor'
+  # - 'PackageCountProcessor'
+  # - 'KtFileCountProcessor'
+
+console-reports:
+  active: false
+  exclude:
+  #  - 'ProjectStatisticsReport'
+  #  - 'ComplexityReport'
+  #  - 'NotificationReport'
+  #  - 'FindingsReport'
+  #  - 'BuildFailureReport'
+
+output-reports:
+  active: true
+  exclude:
+  #  - 'PlainOutputReport'
+  #  - 'XmlOutputReport'
+
+potential-bugs:
+  active: true
+  EqualsAlwaysReturnsTrueOrFalse:
+    active: false
+  EqualsWithHashCodeExist:
+    active: true
+  WrongEqualsTypeParameter:
+    active: false
+  ExplicitGarbageCollectionCall:
+    active: true
+  UnreachableCode:
+    active: true
+  LateinitUsage:
+    active: false
+  UnsafeCallOnNullableType:
+    active: false
+  UnsafeCast:
+    active: false
+
+performance:
+  active: true
+  ForEachOnRange:
+    active: true
+  SpreadOperator:
+    active: true
+  UnnecessaryTemporaryInstantiation:
+    active: true
+
+exceptions:
+  active: true
+
+empty-blocks:
+  active: true
+
+complexity:
+  active: true
+  LongMethod:
+    threshold: 50
+  LongParameterList:
+    functionThreshold: 6
+  LargeClass:
+    threshold: 500
+  CyclomaticComplexMethod:
+    threshold: 10
+  TooManyFunctions:
+    thresholdInFiles: 30
+  ComplexCondition:
+    threshold: 3
+  LabeledExpression:
+    active: false
+  StringLiteralDuplication:
+    active: false
+    threshold: 2
+    ignoreAnnotation: true
+    excludeStringsWithLessThan5Characters: true
+    ignoreStringsRegex: '$^'
+
+formatting:
+  active: true
+  Indentation:
+    active: false
+    indentSize: 4
+  NoConsecutiveBlankLines:
+    active: true
+    autoCorrect: true
+  NoMultipleSpaces:
+    active: true
+    autoCorrect: true
+  SpacingAroundComma:
+    active: true
+    autoCorrect: true
+  SpacingAroundKeyword:
+    active: true
+    autoCorrect: true
+  SpacingAroundColon:
+    active: true
+    autoCorrect: true
+  SpacingAroundCurly:
+    active: true
+    autoCorrect: true
+  SpacingAroundOperators:
+    active: true
+    autoCorrect: true
+  NoTrailingSpaces:
+    active: true
+    autoCorrect: true
+  NoUnusedImports:
+    active: true
+    autoCorrect: true
+  NoSemicolons:
+    active: true
+    autoCorrect: true
+  NoUnitReturn:
+    active: true
+    autoCorrect: true
+
+style:
+  active: true
+  ExpressionBodySyntax:
+    active: false
+    autoCorrect: false
+  ReturnCount:
+    active: true
+    max: 3
+  NewLineAtEndOfFile:
+    active: false
+  OptionalAbstractKeyword:
+    active: true
+  EqualsNullCall:
+    active: false
+  ForbiddenComment:
+    comments:
+      - reason: 'Forbidden FIXME todo marker in comment, please fix the problem.'
+        value: 'FIXME:'
+      - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
+        value: 'STOPSHIP:'
+      - reason: 'Forbidden TODO todo marker in comment, please do the changes.'
+        value: 'TODO:'
+  ForbiddenImport:
+    active: false
+    imports: [ ]
+  ModifierOrder:
+    active: true
+  MagicNumber:
+    active: false
+    ignoreNumbers: [ -1,0,1,2 ]
+    ignoreHashCodeFunction: false
+    ignorePropertyDeclaration: false
+    ignoreAnnotation: false
+  WildcardImport:
+    active: true
+  SafeCast:
+    active: true
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludePackageStatements: false
+    excludeImportStatements: false
+  ProtectedMemberInFinalClass:
+    active: false
+
+comments:
+  active: true
+  CommentOverPrivateFunction:
+    active: true
+  CommentOverPrivateProperty:
+    active: true
+  UndocumentedPublicClass:
+    active: false
+    searchInNestedClass: true
+    searchInInnerClass: true
+    searchInInnerInterface: true
+  UndocumentedPublicFunction:
+    active: false
