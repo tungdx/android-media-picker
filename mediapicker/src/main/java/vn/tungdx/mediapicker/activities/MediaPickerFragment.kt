@@ -1,8 +1,6 @@
 package vn.tungdx.mediapicker.activities
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -18,8 +16,7 @@ import android.widget.AbsListView.LayoutParams
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.core.content.ContextCompat
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
@@ -28,8 +25,10 @@ import vn.tungdx.mediapicker.MediaItem
 import vn.tungdx.mediapicker.MediaOptions
 import vn.tungdx.mediapicker.MediaSelectedListener
 import vn.tungdx.mediapicker.R
+import vn.tungdx.mediapicker.utils.MediaPermissions
 import vn.tungdx.mediapicker.utils.MediaUtils
 import vn.tungdx.mediapicker.utils.Utils
+import vn.tungdx.mediapicker.utils.checkMediaPermission
 import vn.tungdx.mediapicker.widget.HeaderGridView
 import vn.tungdx.mediapicker.widget.PickerImageView
 
@@ -317,15 +316,17 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     }
 
     private fun performRequestMedia() {
-        if (hasPermission()) {
+        if (requireActivity().checkMediaPermission()) {
             requestMedia()
         } else {
             requestReadingExternalStoragePermission()
         }
     }
 
-    private val readExternalStorageLauncher = registerForActivityResult(RequestPermission()) {
-        if (it) {
+    private val readExternalStorageLauncher = registerForActivityResult(
+        RequestMultiplePermissions()
+    ) f@{
+        if (requireActivity().checkMediaPermission()) {
             requestMedia()
         } else {
             requireActivity().finish()
@@ -333,14 +334,7 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     }
 
     private fun requestReadingExternalStoragePermission() {
-        readExternalStorageLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-    }
-
-    private fun hasPermission(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(
-            requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        return permission == PackageManager.PERMISSION_GRANTED
+        readExternalStorageLauncher.launch(MediaPermissions)
     }
 
     override fun onStart() {
@@ -349,11 +343,11 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     }
 
     companion object {
-        private val LOADER_EXTRA_URI = "loader_extra_uri"
-        private val LOADER_EXTRA_PROJECT = "loader_extra_project"
-        private val KEY_MEDIA_TYPE = "media_type"
-        private val KEY_GRID_STATE = "grid_state"
-        private val KEY_MEDIA_SELECTED_LIST = "media_selected_list"
+        private const val LOADER_EXTRA_URI = "loader_extra_uri"
+        private const val LOADER_EXTRA_PROJECT = "loader_extra_project"
+        private const val KEY_MEDIA_TYPE = "media_type"
+        private const val KEY_GRID_STATE = "grid_state"
+        private const val KEY_MEDIA_SELECTED_LIST = "media_selected_list"
 
         fun newInstance(options: MediaOptions): MediaPickerFragment {
             val bundle = Bundle()
