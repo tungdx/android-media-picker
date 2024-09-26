@@ -2,7 +2,6 @@ package vn.tungdx.mediapicker.activities
 
 import android.Manifest
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -16,8 +15,9 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -65,7 +65,8 @@ import java.util.*
  * to [.open] *
  *
  */
-class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener, FragmentHost {
+class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropListener,
+    FragmentManager.OnBackStackChangedListener, FragmentHost {
 
     private var mMediaOptions: MediaOptions? = null
     private var mMediaSwitcher: MenuItem? = null
@@ -110,22 +111,26 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             mMediaOptions = intent.getParcelableExtra(EXTRA_MEDIA_OPTIONS)
             if (mMediaOptions == null) {
                 throw IllegalArgumentException(
-                        "MediaOptions must be not null, you should use MediaPickerActivity.open"
-                                + "(Activity activity, int requestCode,MediaOptions options) "
-                                + "method instead.")
+                    "MediaOptions must be not null, you should use MediaPickerActivity.open"
+                        + "(Activity activity, int requestCode,MediaOptions options) "
+                        + "method instead."
+                )
             }
         }
-        if (activePage == null) {
+        if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container,
-                            MediaPickerFragment.newInstance(mMediaOptions!!))
-                    .commit()
+                .beginTransaction()
+                .replace(
+                    R.id.container,
+                    MediaPickerFragment.newInstance(mMediaOptions!!)
+                )
+                .commit()
         }
         supportFragmentManager.addOnBackStackChangedListener(this)
         if (supportActionBar != null) {
             supportActionBar!!.setBackgroundDrawable(
-                    resources.getDrawable(R.drawable.picker_actionbar_translucent))
+                resources.getDrawable(R.drawable.picker_actionbar_translucent)
+            )
             supportActionBar!!.setDisplayShowTitleEnabled(false)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
@@ -176,20 +181,26 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             if (isPhoto) {
                 if (mMediaOptions!!.isCropped && !mMediaOptions!!.canSelectMultiPhoto()) {
                     // get first item in list (pos=0) because can only crop 1 image at same time.
-                    val mediaItem = MediaItem(MediaItem.PHOTO, activePage.mediaSelectedList!![0]
-                            .uriOrigin!!)
+                    val mediaItem = MediaItem(
+                        MediaItem.PHOTO, activePage.mediaSelectedList!![0]
+                            .uriOrigin!!
+                    )
                     showCropFragment(mediaItem, mMediaOptions!!)
                 } else {
                     returnBackData(activePage.mediaSelectedList)
                 }
             } else {
                 if (mMediaOptions!!.canSelectMultiVideo()) {
-                    returnBackData(activePage
-                            .mediaSelectedList)
+                    returnBackData(
+                        activePage
+                            .mediaSelectedList
+                    )
                 } else {
                     // only get 1st item regardless of have many.
-                    returnVideo(activePage
-                            .mediaSelectedList!![0].uriOrigin)
+                    returnVideo(
+                        activePage
+                            .mediaSelectedList!![0].uriOrigin
+                    )
                 }
             }
             return true
@@ -237,8 +248,10 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
 
     private fun returnBackData(mediaSelectedList: List<MediaItem>?) {
         val data = Intent()
-        data.putParcelableArrayListExtra(EXTRA_MEDIA_SELECTED,
-                mediaSelectedList as ArrayList<MediaItem>?)
+        data.putParcelableArrayListExtra(
+            EXTRA_MEDIA_SELECTED,
+            mediaSelectedList as ArrayList<MediaItem>?
+        )
         setResult(Activity.RESULT_OK, data)
         finish()
     }
@@ -258,7 +271,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
             if (file != null) {
                 mPhotoFileCapture = file
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.getUriForFile(this, file))
-                startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE)
+                takePhotoLauncher.launch(takePictureIntent)
                 mFileObserverTask = FileObserverTask()
                 mFileObserverTask!!.execute()
             }
@@ -275,19 +288,20 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
                 takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, max)
                 if (mMediaOptions!!.isShowWarningVideoDuration) {
                     val dialog = MediaPickerErrorDialog
-                            .newInstance(MessageUtils.getWarningMessageVideoDuration(
-                                    applicationContext, max))
-                    dialog.setOnOKClickListener(DialogInterface.OnClickListener { _, _ ->
-                        startActivityForResult(takeVideoIntent,
-                                REQUEST_VIDEO_CAPTURE)
-                    })
+                        .newInstance(
+                            MessageUtils.getWarningMessageVideoDuration(
+                                applicationContext, max
+                            )
+                        )
+                    dialog.setOnOKClickListener { _, _ ->
+                        takeVideoLauncher.launch(takeVideoIntent)
+                    }
                     dialog.show(supportFragmentManager, null)
                 } else {
-                    startActivityForResult(takeVideoIntent,
-                            REQUEST_VIDEO_CAPTURE)
+                    takeVideoLauncher.launch(takeVideoIntent)
                 }
             } else {
-                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+                takeVideoLauncher.launch(takeVideoIntent)
             }
         }
     }
@@ -299,50 +313,54 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
      */
     private fun tryCorrectPhotoFileCaptured() {
         if (mPhotoFileCapture == null || mFilesCreatedWhileCapturePhoto == null
-                || mFilesCreatedWhileCapturePhoto!!.size <= 0) {
+            || mFilesCreatedWhileCapturePhoto!!.size <= 0
+        ) {
             return
         }
         val captureSize = mPhotoFileCapture!!.length()
         for (file in mFilesCreatedWhileCapturePhoto!!) {
             if (MediaUtils
-                            .isImageExtension(MediaUtils.getFileExtension(file))
-                    && file.length() >= captureSize
-                    && file != mPhotoFileCapture) {
+                    .isImageExtension(MediaUtils.getFileExtension(file))
+                && file.length() >= captureSize
+                && file != mPhotoFileCapture
+            ) {
                 val value = mPhotoFileCapture!!.delete()
                 mPhotoFileCapture = file
-                Log.i(TAG,
-                        String.format(
-                                "Try correct photo file: Delete duplicate photos in [%s] [%s]",
-                                mPhotoFileCapture, value))
+                Log.i(
+                    TAG,
+                    String.format(
+                        "Try correct photo file: Delete duplicate photos in [%s] [%s]",
+                        mPhotoFileCapture, value
+                    )
+                )
                 return
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private val takeVideoLauncher = registerForActivityResult(StartActivityForResult()) f@{
         cancelFileObserverTask()
         stopWatchingFile()
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_PHOTO_CAPTURE -> {
-                    tryCorrectPhotoFileCaptured()
-                    if (mPhotoFileCapture != null) {
-                        MediaUtils.galleryAddPic(applicationContext, mPhotoFileCapture!!)
-                        if (mMediaOptions!!.isCropped) {
-                            val item = MediaItem(MediaItem.PHOTO, Uri.fromFile(mPhotoFileCapture))
-                            showCropFragment(item, mMediaOptions!!)
-                        } else {
-                            val item = MediaItem(MediaItem.PHOTO, Uri.fromFile(mPhotoFileCapture))
-                            val list = ArrayList<MediaItem>()
-                            list.add(item)
-                            returnBackData(list)
-                        }
-                    }
-                }
-                REQUEST_VIDEO_CAPTURE -> returnVideo(data!!.data)
-                else -> {
-                }
+        if (it.resultCode != Activity.RESULT_OK) return@f
+        val videoUri = it.data?.data
+        returnVideo(videoUri)
+    }
+
+    private val takePhotoLauncher = registerForActivityResult(StartActivityForResult()) f@{
+        cancelFileObserverTask()
+        stopWatchingFile()
+        if (it.resultCode != Activity.RESULT_OK) return@f
+        tryCorrectPhotoFileCaptured()
+        if (mPhotoFileCapture != null) {
+            MediaUtils.galleryAddPic(applicationContext, mPhotoFileCapture!!)
+            if (mMediaOptions!!.isCropped) {
+                val item = MediaItem(MediaItem.PHOTO, Uri.fromFile(mPhotoFileCapture))
+                showCropFragment(item, mMediaOptions!!)
+            } else {
+                val item = MediaItem(MediaItem.PHOTO, Uri.fromFile(mPhotoFileCapture))
+                val list = ArrayList<MediaItem>()
+                list.add(item)
+                returnBackData(list)
             }
         }
     }
@@ -350,7 +368,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
     private fun showCropFragment(mediaItem: MediaItem, options: MediaOptions) {
         val fragment = PhotoCropFragment.newInstance(mediaItem, options)
         val transaction = supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction.addToBackStack(null)
@@ -418,8 +436,10 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
         // try get duration using MediaPlayer. (Should get duration using
         // MediaPlayer before use Uri because some devices can get duration by
         // Uri or not exactly. Ex: Asus Memo Pad8)
-        var duration = MediaUtils.getDuration(applicationContext,
-                MediaUtils.getRealVideoPathFromURI(contentResolver, videoUri)!!)
+        var duration = MediaUtils.getDuration(
+            applicationContext,
+            MediaUtils.getRealVideoPathFromURI(contentResolver, videoUri)!!
+        )
         if (duration == 0L) {
             // try get duration one more, by uri of video. Note: Some time can
             // not get duration by Uri after record video.(It's usually happen
@@ -448,7 +468,8 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
                 // in seconds
                 val duration = mMediaOptions!!.minVideoDuration / 1000
                 val msg = MessageUtils.getInvalidMessageMinVideoDuration(
-                        applicationContext, duration)
+                    applicationContext, duration
+                )
                 showVideoInvalid(msg)
             }
 
@@ -457,7 +478,8 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
                 // in seconds.
                 val duration = mMediaOptions!!.maxVideoDuration / 1000
                 val msg = MessageUtils.getInvalidMessageMaxVideoDuration(
-                        applicationContext, duration)
+                    applicationContext, duration
+                )
                 showVideoInvalid(msg)
             }
             // ok
@@ -475,7 +497,7 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
 
     private fun showVideoInvalid(msg: String) {
         val errorDialog = MediaPickerErrorDialog
-                .newInstance(msg)
+            .newInstance(msg)
         errorDialog.show(supportFragmentManager, null)
     }
 
@@ -484,11 +506,13 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
         override fun doInBackground(vararg params: Void): Void? {
             if (isCancelled) return null
             if (mFileObserver == null) {
-                mFileObserver = RecursiveFileObserver(Environment
+                mFileObserver = RecursiveFileObserver(
+                    Environment
                         .getExternalStorageDirectory().absolutePath,
-                        FileObserver.CREATE)
+                    FileObserver.CREATE
+                )
                 mFileObserver!!
-                        .setFileCreatedListener(mOnFileCreatedListener)
+                    .setFileCreatedListener(mOnFileCreatedListener)
             }
             mFileObserver!!.startWatching()
             return null
@@ -531,29 +555,19 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
     }
 
     private fun requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA_PERMISSION)
+        checkCameraLauncher.launch(arrayOf(Manifest.permission.CAMERA))
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_CAMERA_PERMISSION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (takePhotoPending) {
-                        takePhoto()
-                    } else if (takeVideoPending) {
-                        takeVideo()
-                    }
+    private val checkCameraLauncher = registerForActivityResult(RequestMultiplePermissions()) f@{
+        if (it.isEmpty()) return@f
 
-                }
-                return
-            }
-        }
-        //pass permission result to fragments in this activity
-        val fragments = supportFragmentManager.fragments
-        for (fragment in fragments) {
-            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val allAccept = it.values.firstOrNull { !it } == null
+        if (!allAccept) return@f
+
+        if (takePhotoPending) {
+            takePhoto()
+        } else if (takeVideoPending) {
+            takeVideo()
         }
     }
 
@@ -570,19 +584,17 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
          * before handle your logic.
          */
         const val EXTRA_MEDIA_SELECTED = "extra_media_selected"
-        private const val REQUEST_PHOTO_CAPTURE = 100
-        private const val REQUEST_VIDEO_CAPTURE = 200
-
         private const val KEY_PHOTOFILE_CAPTURE = "key_photofile_capture"
-        private const val REQUEST_CAMERA_PERMISSION = 300
 
         /**
          * Start [MediaPickerActivity] in [Activity] to pick photo or
          * video that depends on [MediaOptions] passed.
          */
         @JvmOverloads
-        fun open(activity: Activity, requestCode: Int,
-                 options: MediaOptions = MediaOptions.createDefault()) {
+        fun open(
+            activity: Activity, requestCode: Int,
+            options: MediaOptions = MediaOptions.createDefault()
+        ) {
             val intent = Intent(activity, MediaPickerActivity::class.java)
             intent.putExtra(EXTRA_MEDIA_OPTIONS, options)
             activity.startActivityForResult(intent, requestCode)
@@ -593,10 +605,14 @@ class MediaPickerActivity : AppCompatActivity(), MediaSelectedListener, CropList
          * video that depends on [MediaOptions] passed.
          */
         @JvmOverloads
-        fun open(fragment: Fragment, requestCode: Int,
-                 options: MediaOptions = MediaOptions.createDefault()) {
-            val intent = Intent(fragment.activity,
-                    MediaPickerActivity::class.java)
+        fun open(
+            fragment: Fragment, requestCode: Int,
+            options: MediaOptions = MediaOptions.createDefault()
+        ) {
+            val intent = Intent(
+                fragment.activity,
+                MediaPickerActivity::class.java
+            )
             intent.putExtra(EXTRA_MEDIA_OPTIONS, options)
             fragment.startActivityForResult(intent, requestCode)
         }

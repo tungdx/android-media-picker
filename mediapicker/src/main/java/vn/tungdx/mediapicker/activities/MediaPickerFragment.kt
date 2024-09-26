@@ -18,6 +18,7 @@ import android.widget.AbsListView.LayoutParams
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
@@ -323,11 +324,16 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         }
     }
 
+    private val readExternalStorageLauncher = registerForActivityResult(RequestPermission()) {
+        if (it) {
+            requestMedia()
+        } else {
+            requireActivity().finish()
+        }
+    }
+
     private fun requestReadingExternalStoragePermission() {
-        requestPermissions(
-            arrayOf("android.permission.READ_EXTERNAL_STORAGE"),
-            REQUEST_READ_EXTERNAL_STORAGE
-        )
+        readExternalStorageLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun hasPermission(): Boolean {
@@ -335,26 +341,6 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
             requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         return permission == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_READ_EXTERNAL_STORAGE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestMedia()
-                }
-                return
-            }
-        }
-        //handle permissions that passed from the host activity.
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            requestMedia()
-        }
     }
 
     override fun onStart() {
@@ -368,7 +354,6 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         private val KEY_MEDIA_TYPE = "media_type"
         private val KEY_GRID_STATE = "grid_state"
         private val KEY_MEDIA_SELECTED_LIST = "media_selected_list"
-        private val REQUEST_READ_EXTERNAL_STORAGE = 100
 
         fun newInstance(options: MediaOptions): MediaPickerFragment {
             val bundle = Bundle()

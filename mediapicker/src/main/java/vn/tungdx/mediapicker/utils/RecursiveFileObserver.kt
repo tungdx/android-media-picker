@@ -2,12 +2,15 @@ package vn.tungdx.mediapicker.utils
 
 import android.os.FileObserver
 import java.io.File
-import java.util.*
+import java.util.Stack
 
 /**
  * Same [FileObserver] but support recursive in folder.
  */
-class RecursiveFileObserver @JvmOverloads constructor(internal var mPath: String, internal var mMask: Int = FileObserver.ALL_EVENTS) : FileObserver(mPath, mMask) {
+class RecursiveFileObserver @JvmOverloads constructor(
+    internal var mPath: String,
+    internal var mMask: Int = FileObserver.ALL_EVENTS
+) : FileObserver(mPath, mMask) {
 
     private var mFileCreatedListener: OnFileCreatedListener? = null
 
@@ -38,7 +41,8 @@ class RecursiveFileObserver @JvmOverloads constructor(internal var mPath: String
             val files = path.listFiles() ?: continue
             for (i in files.indices) {
                 if (files[i].isDirectory && files[i].name != "."
-                        && files[i].name != "..") {
+                    && files[i].name != ".."
+                ) {
                     stack.push(files[i].path)
                 }
             }
@@ -66,7 +70,8 @@ class RecursiveFileObserver @JvmOverloads constructor(internal var mPath: String
         }
     }
 
-    private inner class SingleFileObserver(private val mPath: String, mask: Int) : FileObserver(mPath, mask) {
+    private inner class SingleFileObserver(private val mPath: String, mask: Int) :
+        FileObserver(mPath, mask) {
 
         override fun onEvent(event: Int, path: String?) {
             val newPath = "$mPath/$path"

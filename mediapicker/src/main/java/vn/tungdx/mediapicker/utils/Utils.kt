@@ -25,7 +25,7 @@ object Utils {
             attr = R.attr.actionBarSize
         }
         val styledAttributes = activity.theme
-                .obtainStyledAttributes(intArrayOf(attr))
+            .obtainStyledAttributes(intArrayOf(attr))
         val actionbarSize = styledAttributes.getDimension(0, 0f).toInt()
         styledAttributes.recycle()
         return actionbarSize
@@ -44,8 +44,10 @@ object Utils {
         return if (!hasExternalStorage()) {
             createTempFile(context, context.cacheDir)
         } else {
-            createTempFile(context,
-                    context.getExternalFilesDir("caches"))
+            createTempFile(
+                context,
+                context.getExternalFilesDir("caches")
+            )
         }
     }
 
@@ -74,6 +76,10 @@ object Utils {
 
     @JvmStatic
     fun getUriForFile(context: Context, file: File): Uri {
-        return FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
+        return FileProvider.getUriForFile(
+            context,
+            context.applicationContext.packageName + ".provider",
+            file
+        )
     }
 }
