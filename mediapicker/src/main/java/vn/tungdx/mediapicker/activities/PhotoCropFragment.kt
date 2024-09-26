@@ -15,7 +15,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.exifinterface.media.ExifInterface
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.canhub.cropper.CropImageView
 import vn.tungdx.mediapicker.CropListener
 import vn.tungdx.mediapicker.MediaItem
 import vn.tungdx.mediapicker.MediaOptions
@@ -47,7 +47,7 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
     private var mDialog: ProgressDialog? = null
     private var mSaveFileCroppedTask: SaveFileCroppedTask? = null
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         mCropListener = activity as CropListener?
     }
@@ -56,9 +56,9 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
             mMediaItemSelected = savedInstanceState
-                    .getParcelable(EXTRA_MEDIA_SELECTED)
+                .getParcelable(EXTRA_MEDIA_SELECTED)
             mMediaOptions = savedInstanceState
-                    .getParcelable(EXTRA_MEDIA_OPTIONS)
+                .getParcelable(EXTRA_MEDIA_OPTIONS)
         } else {
             val bundle = arguments
             mMediaItemSelected = bundle!!.getParcelable(EXTRA_MEDIA_SELECTED)
@@ -72,8 +72,10 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
         outState.putParcelable(EXTRA_MEDIA_SELECTED, mMediaItemSelected)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_mediapicker_crop, container, false)
         init(root)
         return root
@@ -95,24 +97,30 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mCropImageView!!.setFixedAspectRatio(mMediaOptions!!.isFixAspectRatio)
-        mCropImageView!!.setAspectRatio(mMediaOptions!!.aspectX,
-                mMediaOptions!!.aspectY)
+        mCropImageView!!.setAspectRatio(
+            mMediaOptions!!.aspectX,
+            mMediaOptions!!.aspectY
+        )
         var filePath: String? = null
         val scheme = mMediaItemSelected!!.uriOrigin?.scheme
         if (scheme == ContentResolver.SCHEME_CONTENT) {
-            filePath = MediaUtils.getRealImagePathFromURI(activity!!
-                    .contentResolver, mMediaItemSelected!!.uriOrigin!!)
+            filePath = MediaUtils.getRealImagePathFromURI(
+                requireActivity()
+                    .contentResolver, mMediaItemSelected!!.uriOrigin!!
+            )
         } else if (scheme == ContentResolver.SCHEME_FILE) {
             filePath = mMediaItemSelected!!.uriOrigin?.path
         }
         if (TextUtils.isEmpty(filePath)) {
             Log.e("PhotoCrop", "not found file path")
-            fragmentManager!!.popBackStack()
+            parentFragmentManager.popBackStack()
             return
         }
         val width = resources.displayMetrics.widthPixels / 3 * 2
-        val bitmap = MediaUtils.decodeSampledBitmapFromFile(filePath!!, width,
-                width)
+        val bitmap = MediaUtils.decodeSampledBitmapFromFile(
+            filePath!!, width,
+            width
+        )
         try {
             val exif = ExifInterface(filePath)
             mCropImageView!!.setImageBitmap(bitmap, exif)
@@ -139,10 +147,10 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
             }
 
         } else if (i == R.id.cancel) {
-            fragmentManager!!.popBackStack()
+            parentFragmentManager.popBackStack()
 
         } else if (i == R.id.save) {
-            mSaveFileCroppedTask = SaveFileCroppedTask(activity!!)
+            mSaveFileCroppedTask = SaveFileCroppedTask(requireActivity())
             mSaveFileCroppedTask!!.execute()
 
         } else {
@@ -160,8 +168,10 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
             } else {
                 file = Utils.createTempFile(mContext!!)
             }
-            val success = bitmap.compress(CompressFormat.JPEG, 100,
-                    FileOutputStream(file))
+            val success = bitmap.compress(
+                CompressFormat.JPEG, 100,
+                FileOutputStream(file)
+            )
             if (success) {
                 return Uri.fromFile(file)
             }
@@ -179,8 +189,10 @@ class PhotoCropFragment : BaseFragment(), OnClickListener {
         override fun onPreExecute() {
             super.onPreExecute()
             if (reference.get() != null && mDialog == null || !mDialog!!.isShowing) {
-                mDialog = ProgressDialog.show(reference.get(), null, reference
-                        .get()!!.getString(R.string.waiting), false, false)
+                mDialog = ProgressDialog.show(
+                    reference.get(), null, reference
+                        .get()!!.getString(R.string.waiting), false, false
+                )
             }
         }
 

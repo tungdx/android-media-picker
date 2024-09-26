@@ -8,7 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.provider.MediaStore.*
+import android.provider.MediaStore.Images
+import android.provider.MediaStore.MediaColumns
+import android.provider.MediaStore.Video
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +22,15 @@ import androidx.core.content.ContextCompat
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
-import vn.tungdx.mediapicker.*
+import vn.tungdx.mediapicker.MediaAdapter
+import vn.tungdx.mediapicker.MediaItem
+import vn.tungdx.mediapicker.MediaOptions
+import vn.tungdx.mediapicker.MediaSelectedListener
+import vn.tungdx.mediapicker.R
 import vn.tungdx.mediapicker.utils.MediaUtils
 import vn.tungdx.mediapicker.utils.Utils
 import vn.tungdx.mediapicker.widget.HeaderGridView
 import vn.tungdx.mediapicker.widget.PickerImageView
-import java.util.*
 
 
 /**
@@ -37,7 +42,8 @@ import java.util.*
  * item from list depends on [MediaOptions] that passed when open media
  * picker.
  */
-class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
+class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>,
+    OnItemClickListener {
 
     private var mGridView: HeaderGridView? = null
     private var mNoItemView: TextView? = null
@@ -57,7 +63,7 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         mSavedInstanceState = Bundle()
     }
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         mMediaSelectedListener = activity as MediaSelectedListener?
     }
@@ -66,14 +72,15 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
             mMediaOptions = savedInstanceState
-                    .getParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS)
+                .getParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS)
             mediaType = savedInstanceState.getInt(KEY_MEDIA_TYPE)
             mediaSelectedList = savedInstanceState
-                    .getParcelableArrayList(KEY_MEDIA_SELECTED_LIST)
+                .getParcelableArrayList(KEY_MEDIA_SELECTED_LIST)
             mSavedInstanceState = savedInstanceState
         } else {
-            mMediaOptions = arguments!!.getParcelable(
-                    MediaPickerActivity.EXTRA_MEDIA_OPTIONS)
+            mMediaOptions = requireArguments().getParcelable(
+                MediaPickerActivity.EXTRA_MEDIA_OPTIONS
+            )
             if (mMediaOptions!!.canSelectPhotoAndVideo() || mMediaOptions!!.canSelectPhoto()) {
                 mediaType = MediaItem.PHOTO
             } else {
@@ -87,27 +94,37 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         }
         // get the photo size and spacing
         mPhotoSize = resources.getDimensionPixelSize(
-                R.dimen.picker_photo_size)
+            R.dimen.picker_photo_size
+        )
         mPhotoSpacing = resources.getDimensionPixelSize(
-                R.dimen.picker_photo_spacing)
+            R.dimen.picker_photo_spacing
+        )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_mediapicker, container,
-                false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val root = inflater.inflate(
+            R.layout.fragment_mediapicker, container,
+            false
+        )
         initView(root)
         return root
     }
 
     private fun requestPhotos(isRestart: Boolean) {
-        requestMedia(Images.Media.EXTERNAL_CONTENT_URI,
-                MediaUtils.PROJECT_PHOTO, isRestart)
+        requestMedia(
+            Images.Media.EXTERNAL_CONTENT_URI,
+            MediaUtils.PROJECT_PHOTO, isRestart
+        )
     }
 
     private fun requestVideos(isRestart: Boolean) {
-        requestMedia(Video.Media.EXTERNAL_CONTENT_URI,
-                MediaUtils.PROJECT_VIDEO, isRestart)
+        requestMedia(
+            Video.Media.EXTERNAL_CONTENT_URI,
+            MediaUtils.PROJECT_VIDEO, isRestart
+        )
     }
 
     private fun requestMedia(uri: Uri, projects: Array<String>, isRestart: Boolean) {
@@ -123,14 +140,19 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (mGridView != null) {
-            mSavedInstanceState!!.putParcelable(KEY_GRID_STATE,
-                    mGridView!!.onSaveInstanceState())
+            mSavedInstanceState!!.putParcelable(
+                KEY_GRID_STATE,
+                mGridView!!.onSaveInstanceState()
+            )
         }
         mSavedInstanceState!!.putParcelable(
-                MediaPickerActivity.EXTRA_MEDIA_OPTIONS, mMediaOptions)
+            MediaPickerActivity.EXTRA_MEDIA_OPTIONS, mMediaOptions
+        )
         mSavedInstanceState!!.putInt(KEY_MEDIA_TYPE, mediaType)
-        mSavedInstanceState!!.putParcelableArrayList(KEY_MEDIA_SELECTED_LIST,
-                mediaSelectedList as ArrayList<MediaItem>?)
+        mSavedInstanceState!!.putParcelableArrayList(
+            KEY_MEDIA_SELECTED_LIST,
+            mediaSelectedList as ArrayList<MediaItem>?
+        )
         outState.putAll(mSavedInstanceState)
     }
 
@@ -148,8 +170,10 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         }
         switchToData()
         if (mMediaAdapter == null) {
-            mMediaAdapter = MediaAdapter(mContext!!, cursor, 0,
-                    mMediaImageLoader, mediaType, mMediaOptions!!)
+            mMediaAdapter = MediaAdapter(
+                mContext!!, cursor, 0,
+                mMediaImageLoader, mediaType, mMediaOptions!!
+            )
         } else {
             mMediaAdapter!!.setMediaType(mediaType)
             mMediaAdapter!!.swapCursor(cursor)
@@ -178,8 +202,10 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
             mMediaAdapter!!.swapCursor(null)
     }
 
-    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int,
-                             id: Long) {
+    override fun onItemClick(
+        parent: AdapterView<*>, view: View, position: Int,
+        id: Long
+    ) {
         val `object` = parent.adapter.getItem(position)
         if (`object` is Cursor) {
             val uri: Uri
@@ -189,14 +215,16 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
                 uri = MediaUtils.getVideoUri(`object`)
             }
             val pickerImageView = view
-                    .findViewById<View>(R.id.thumbnail) as PickerImageView
+                .findViewById<View>(R.id.thumbnail) as PickerImageView
             val mediaItem = MediaItem(mediaType, uri)
             mMediaAdapter!!.updateMediaSelected(mediaItem, pickerImageView)
             mediaSelectedList = mMediaAdapter!!.mediaSelectedList
 
             if (mMediaAdapter!!.hasSelected()) {
-                mMediaSelectedListener!!.onHasSelected(mMediaAdapter!!
-                        .mediaSelectedList)
+                mMediaSelectedListener!!.onHasSelected(
+                    mMediaAdapter!!
+                        .mediaSelectedList
+                )
             } else {
                 mMediaSelectedListener!!.onHasNoSelected()
             }
@@ -226,8 +254,10 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     override fun onDestroyView() {
         super.onDestroyView()
         if (mGridView != null) {
-            mSavedInstanceState!!.putParcelable(KEY_GRID_STATE,
-                    mGridView!!.onSaveInstanceState())
+            mSavedInstanceState!!.putParcelable(
+                KEY_GRID_STATE,
+                mGridView!!.onSaveInstanceState()
+            )
             mGridView = null
         }
         if (mMediaAdapter != null) {
@@ -251,8 +281,9 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         mGridView = view.findViewById<View>(R.id.grid) as HeaderGridView
         val header = View(activity)
         val params = LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                Utils.getActionbarHeight(activity!!))
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            Utils.getActionbarHeight(requireActivity())
+        )
         header.layoutParams = params
         mGridView!!.addHeaderView(header)
 
@@ -263,8 +294,10 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
         // dynamically
         mGridView!!.viewTreeObserver.addOnGlobalLayoutListener {
             if (mMediaAdapter != null && mMediaAdapter!!.numColumns == 0) {
-                val numColumns = Math.floor((mGridView!!
-                        .width / (mPhotoSize + mPhotoSpacing)).toDouble()).toInt()
+                val numColumns = Math.floor(
+                    (mGridView!!
+                        .width / (mPhotoSize + mPhotoSpacing)).toDouble()
+                ).toInt()
                 if (numColumns > 0) {
                     val columnWidth = mGridView!!.width / numColumns - mPhotoSpacing
                     mMediaAdapter!!.numColumns = numColumns
@@ -291,16 +324,24 @@ class MediaPickerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor
     }
 
     private fun requestReadingExternalStoragePermission() {
-        requestPermissions(arrayOf("android.permission.READ_EXTERNAL_STORAGE"),
-                REQUEST_READ_EXTERNAL_STORAGE)
+        requestPermissions(
+            arrayOf("android.permission.READ_EXTERNAL_STORAGE"),
+            REQUEST_READ_EXTERNAL_STORAGE
+        )
     }
 
     private fun hasPermission(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permission = ContextCompat.checkSelfPermission(
+            requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
         return permission == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_READ_EXTERNAL_STORAGE -> {

@@ -16,7 +16,7 @@ open class BaseFragment : Fragment() {
 
     protected lateinit var mMediaImageLoader: MediaImageLoader
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         val host = activity as FragmentHost?
         mMediaImageLoader = host!!.imageLoader

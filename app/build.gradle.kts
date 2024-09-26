@@ -9,14 +9,14 @@ plugins {
 }
 
 android {
-    
+
     setupAndroidBasicConfigs()
     namespace = "vn.tungdx.mediapickersample"
     defaultConfig {
         versionCode = 1
         versionName = "1.0"
     }
-    
+
     buildTypes {
 
         getByName("debug") {
@@ -34,3 +34,5 @@ dependencies {
     implementation(fileTree("dir" to "libs", "include" to listOf("*.jar")))
     implementation(project(":mediapicker"))
 }
+
+kotlin { autoConfig() }

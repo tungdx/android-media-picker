@@ -5,15 +5,12 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
 }
+
 android {
     
     setupAndroidBasicConfigs()
-    namespace = "freesky1102.xyz.mediapicker"
+    namespace = "vn.tungdx.mediapicker"
 
-    defaultConfig {
-        versionCode  = 1
-        versionName  = "1.0"
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -25,7 +22,8 @@ android {
 dependencies {
     api(fileTree("dir" to "libs", "include" to listOf("*.jar")))
     api(libs.kotlin.stdlib)
-    implementation(libs.glide.glide)
+    api(libs.androidx.appCompat)
+    api(libs.glide.glide)
     ksp(libs.glide.compiler)
     implementation("com.vanniktech:android-image-cropper:4.6.0")
 }

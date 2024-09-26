@@ -21,14 +21,14 @@ class MediaPickerErrorDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mMessage = arguments!!.getString("msg")
+        mMessage = requireArguments().getString("msg")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity)
-                .setMessage(mMessage)
-                .setPositiveButton(R.string.ok, mOnPositionClickListener)
-                .create()
+            .setMessage(mMessage)
+            .setPositiveButton(R.string.ok, mOnPositionClickListener)
+            .create()
     }
 
     fun setOnOKClickListener(mOnClickListener: OnClickListener) {
